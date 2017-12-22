@@ -1,0 +1,29 @@
+
+<div id="login_form">
+    <h1><span class="app_name">{{.Config.ProductName}}</span> | 控制台</h1>
+    <form class="validate" method="post" action="/admincp/login">
+        <ul class="form">
+            <li>
+                <label for="username">用户名</label>
+                <input id="username" name="username" type="text" class="text required" />
+                <div style="clear:both"></div>
+            </li>
+            <li>
+                <label for="password">密  码</label>
+                <input id="password" name="password" type="password" class="text required" />
+                <div style="clear:both"></div>
+            </li>
+            <li class="submit">
+                <input type="submit" class="button" name="login_button" class="button" value="登录" />
+            </li>
+        </ul>
+    </form>
+    <div class="links">
+        <ul class="links">
+            <li><a href="/admincp/regist">注册新用户</a></li>
+            <li><a href="/">访问网站</a></li>
+            <li><a href="/admincp/forgot_password">忘记密码</a></li>
+            <li><a href="{{.Config.SupportUrl}}">{{.Config.ProductName}} 技术支持</a></li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+.upload_gallery{
+	margin-left:110px;
+	clear:both;
+	overflow:auto;
+}
+
+ul.upload_gallery li{
+	float:left;
+	padding:10px;
+	border:1px solid #CCC;
+	text-align:center;
+	width:150px;
+	height:150px;
+	float:left;
+	margin-right:10px;
+	margin-bottom:10px;
+	clear:none;
+	background:#FFF;
+}
+
+.upload_gallery li img{
+	max-width:120px;
+	max-height:120px;
+}
+
+.button{
+	cursor:pointer;
+	text-decoration: underline;
+}
+
+.file_list{
+	margin-left:150px;
+	clear:both;
+	border-collapse:collapse;
+	overflow:auto;
+}
+
+.file_list td{
+	padding:5px;
+	background:#FFF;
+}
+
+.ui-icon-arrowthick-2-n-s{
+	cursor: move;
+}

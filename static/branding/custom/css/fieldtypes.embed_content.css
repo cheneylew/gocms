@@ -1,0 +1,15 @@
+.embed_content{
+	margin-left:150px;
+	clear:both;
+	border-collapse:collapse;
+	overflow:auto;
+}
+
+.embed_content td{
+	padding:5px;
+	background:#FFF;
+}
+
+.ui-icon-arrowthick-2-n-s{
+	cursor: move;
+}
