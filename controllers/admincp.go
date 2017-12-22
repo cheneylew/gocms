@@ -5,6 +5,7 @@ import (
 	"github.com/cheneylew/gocms/database"
 	"github.com/cheneylew/gocms/models"
 	"time"
+	"github.com/cheneylew/gocms/conf"
 )
 
 type AdminCPController struct {
@@ -14,6 +15,7 @@ type AdminCPController struct {
 func (c *AdminCPController) Prepare() {
 	c.BaseController.Prepare()
 	c.Layout = "admin/layout.html"
+	c.Data["Title"] = conf.GlobalConfig.ProductName+" | 控制台"
 
 	//登陆检测
 	urlPath := c.Ctx.Request.URL.Path
@@ -41,7 +43,7 @@ func (c *AdminCPController) Index() {
 
 
 func (c *AdminCPController) Home() {
-	c.TplName = "admin/home.html"
+	c.TplName = "admin/dashboard.html"
 }
 
 func (c *AdminCPController) Login() {
@@ -94,4 +96,9 @@ func (c *AdminCPController) Regist() {
 
 		c.SetError("注册用户成功")
 	}
+}
+
+func (c *AdminCPController) Logout() {
+	c.UserLogout()
+	c.RedirectWithURL("/admincp/login")
 }

@@ -2,18 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Login</title>
+    <title>{{.Title}}</title>
     <link href="/static/branding/default/css/universal.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="/static/branding/default/css/login.css" rel="stylesheet" type="text/css" media="screen" />
     <script type="text/javascript" src="/static/branding/default/js/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/static/branding/default/js/tiptip.min.js"></script>
     <script type="text/javascript" src="/static/branding/default/js/universal.js"></script>
     <script type="text/javascript" src="/static/branding/default/js/form.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#username').focus();
-        });
-    </script>
+
+    <script type="text/javascript" src="http://localhost/hero/branding/default/js/jquery.simplemodal.1.4.min.js"></script>
+    <script type="text/javascript" src="http://localhost/hero/branding/default/js/dashboard.js"></script>
+    <script type="text/javascript" src="http://localhost/hero/branding/default/js/jquery.sparkline.js">x</script>
+    <link rel="stylesheet" type="text/css" href="http://localhost/hero/branding/default/css/dashboard.css" />
 </head>
 <body>
 <div id="notices">{{if .Error}}{{str2html .Error}}{{end}}</div>

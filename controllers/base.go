@@ -29,11 +29,11 @@ func (c *BaseController) Prepare() {
 	urlPath := c.Ctx.Request.URL.Path
 	c.Data["Config"] = conf.GlobalConfig
 
-	error := c.GetString("error")
+	error := c.GetString("msg")
 	if len(error) > 0 {
 		c.SetError(error)
 	}
-	
+
 	c.Layout = "layout.html"
 	if BEEGO_CONFIG.LoginCheck {
 		if !utils.Contain(FILTER_PATHS, urlPath) {
@@ -51,7 +51,7 @@ func (c *BaseController) SetError(error string) {
 }
 
 func (c *BaseController) RedirectWithURLError(url, error string) {
-	c.RedirectWithURL(url+"?error="+error)
+	c.RedirectWithURL(url+"?msg="+error)
 }
 
 

@@ -1,0 +1,212 @@
+<div id="header">
+    <div id="app_bar">
+        <span class="app_name"><a href="{{.BaseUrl}}" class="tooltip" title="Open the homepage of your website.">{{.Config.ProductName}}</a></span> | 控制台
+        <div id="logged_in">
+            当前登录用户: <span class="username">{{.User.Username}}</span> (
+            <a href="/admincp/logout">退出</a>)
+        </div>
+        <a id="get_support" href="{{.Config.SupportUrl}}">技术支持</a>
+    </div>
+    <div id="navigation">
+        <ul>
+            <li class="dashboard">
+                <a class="parent active" href="/admincp/home">仪表盘</a>
+            </li>
+            <li class="publish">
+                <a class="parent" href="#">文章管理</a>
+                <ul class="children" style="display:none">
+                    <li>
+                        <a rel="10" href="http://localhost/hero/admincp/publish/create">发布文章</a>
+                    </li>
+                    <li>
+                        <a rel="11" href="http://localhost/hero/admincp/publish/manage/11">&#149; 管理 Blog</a>
+                    </li>
+                    <li>
+                        <a rel="12" href="http://localhost/hero/admincp/publish/manage/3">&#149; 管理 Events</a>
+                    </li>
+                    <li>
+                        <a rel="13" href="http://localhost/hero/admincp/publish/manage/10">&#149; 管理 News</a>
+                    </li>
+                    <li>
+                        <a rel="30" href="http://localhost/hero/admincp/blogs">博客/内容列表</a>
+                    </li>
+                    <li>
+                        <a rel="40" href="http://localhost/hero/admincp/rss">RSS 种子</a>
+                    </li>
+                    <li>
+                        <a rel="45" href="http://localhost/hero/admincp/forms">前台表单</a>
+                    </li>
+                    <li>
+                        <a rel="50" href="http://localhost/hero/admincp/publish/topics">文章话题</a>
+                    </li>
+                    <li>
+                        <a rel="60" href="http://localhost/hero/admincp/publish/types">内容模型</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="members">
+                <a class="parent" href="#">会员</a>
+                <ul class="children" style="display:none">
+                    <li>
+                        <a rel="10" href="http://localhost/hero/admincp/users">管理用户</a>
+                    </li>
+                    <li>
+                        <a rel="20" href="http://localhost/hero/admincp/users/add">添加用户/管理员</a>
+                    </li>
+                    <li>
+                        <a rel="25" href="http://localhost/hero/admincp/emails/send">发送邮件</a>
+                    </li>
+                    <li>
+                        <a rel="30" href="http://localhost/hero/admincp/users/logins">登陆历史</a>
+                    </li>
+                    <li>
+                        <a rel="40" href="http://localhost/hero/admincp/users/groups">用户组</a>
+                    </li>
+                    <li>
+                        <a rel="44" href="http://localhost/hero/admincp/import">导入用户</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="reports">
+                <a class="parent" href="#">报告</a>
+                <ul class="children" style="display:none">
+                    <li>
+                        <a rel="70" href="http://localhost/hero/admincp/reports/registrations">注册用户</a>
+                    </li>
+                    <li>
+                        <a rel="80" href="http://localhost/hero/admincp/reports/popular">流行文章</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="design">
+                <a class="parent" href="#">设计</a>
+                <ul class="children" style="display:none">
+                    <li>
+                        <a rel="1" href="http://localhost/hero/admincp/theme">主题</a>
+                    </li>
+                    <li>
+                        <a rel="10" href="http://localhost/hero/admincp/theme/editor">主题编辑器</a>
+                    </li>
+                    <li>
+                        <a rel="20" href="http://localhost/hero/admincp/menu_manager">菜单管理</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="configuration">
+                <a class="parent" href="#">配置</a>
+                <ul class="children" style="display:none">
+                    <li>
+                        <a rel="10" href="http://localhost/hero/admincp/settings">设置</a>
+                    </li>
+                    <li>
+                        <a rel="20" href="http://localhost/hero/admincp/emails">邮件</a>
+                    </li>
+                    <li>
+                        <a rel="35" href="http://localhost/hero/admincp/search">搜索</a>
+                    </li>
+                    <li>
+                        <a rel="36" href="http://localhost/hero/admincp/paywall">支付</a>
+                    </li>
+                    <li>
+                        <a rel="40" href="http://localhost/hero/admincp/custom_fields">自定义字段</a>
+                    </li>
+                    <li>
+                        <a rel="100" href="http://localhost/hero/admincp/reports/cronjob">Cronjob</a>
+                    </li>
+                    <li>
+                        <a rel="110" href="http://localhost/hero/admincp/settings/modules">组件</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div style="clear: both"></div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+<div id="wrapper">
+    <div id="content">
+        <div id="box-top-right"></div>
+        <div id="box-bottom-left"></div>
+        <div id="box-bottom-right"></div>
+        <div id="box-content">
+
+            <div id="dash_left">
+
+                <div id="site_activity">
+                    <div id="update_status">
+                        Last update: 7:15pm
+                    </div>
+                    <h2>近期活动</h2>
+                    <ul id="activity_list">
+                    </ul>
+                </div>
+
+            </div>
+
+            <div id="dash_right">
+
+                <div class="quick_publish">
+                    <ul>
+                        <li>
+                            <a href="http://localhost/hero/admincp/publish/create_post/11">&#43; 发布 Blog</a>
+                        </li>
+                        <li>
+                            <a href="http://localhost/hero/admincp/publish/create_post/10">&#43; 发布 News</a>
+                        </li>
+                    </ul>
+                    <a class="more" href="http://localhost/hero/admincp/publish/create">发布其它类型文章 &gt;</a>
+                </div>
+
+                <div class="dash_box system">
+                    <h3>系统状态</h3>
+                    <div class="contents">
+                        <table style="width: 100%" class="system">
+                            <tr>
+                                <td style="width: 40%"><strong>PHP</strong></td>
+                                <td style="width:60%">5.3.29</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 40%"><strong>MySQL</strong></td>
+                                <td style="width:60%">5.5.42</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 40%"><strong>Hero</strong></td>
+                                <td style="width:60%">3.76</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 40%"><strong>Theme</strong></td>
+                                <td style="width:60%">electric</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dash_box app_details">
+                    <h3>Hero</h3>
+                    <div class="contents">
+                        <ul>
+                            <li>
+                                <a href="http://www.heroframework.com/">Hero</a>
+                            </li>
+                            <li>
+                                <a href="http://www.heroframework.com/support">Support &amp; Documentation</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="clear:both"></div>
+
+        </div>
+        <div id="box-bottom"></div>
+    </div>
+</div>
+
+<div id="footer">
+    版权所有@
+    <a href="">Hero</a> v3.76. </div>
+<div class="hidden" id="base_url">http://localhost/hero/admincp/</div>
+<div class="hidden" id="site_url">http://localhost/hero/</div>
+<div class="hidden" id="current_url">http://localhost/hero/admincp</div>
