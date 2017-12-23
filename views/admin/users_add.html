@@ -1,0 +1,52 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<h1>添加用户</h1>
+			<form class="form validate" enctype="multipart/form-data" id="form_user" method="post" action="/admincp/users/add">
+
+				<fieldset>
+					<legend>System Information</legend>
+					<ul class="form">
+						<li id="row_"><label class="full" for="username">用户名</label></li>
+						<li><input type="text" class="text required full" placeholder="" style="width:100%" name="username" rel="" id="username" value="" /></li>
+						<li id="row_"><label class="full" for="email">邮箱</label></li>
+						<li><input type="text" class="text required full" placeholder="email@example.com" style="width:100%" name="email" rel="" id="email" value="" /></li>
+						<li id="row_"><label class="full" for="password">密码</label></li>
+						<li><input type="password" class="text required full" style="width:100%" rel="" name="password" id="password" value="" /></li>
+						<li id="row_"><label class="full" for="password2">确认密码</label></li>
+						<li><input type="password" class="text required full" style="width:100%" rel="" name="password2" id="password2" value="" /></li>
+						</li>
+						<li>
+							<div class="help" style="margin-left:0">密码长度必须至少为6个字符</div>
+						</li>
+					</ul>
+				</fieldset>
+				<fieldset>
+					<legend>Usergroup</legend>
+					<ul class="form">
+						<li id="row_"><label class="" for="usergroups[]">用户组</label>
+							<select name="usergroups[]" id="usergroups[]" class="required">
+                                {{range .Roles}}
+                                <option value="{{.UserRoleId}}" {{if Equal .Grade 0}}selected="selected"{{end}}>{{.Name}}</option>
+                                {{end}}
+							</select>
+						</li>
+					</ul>
+				</fieldset>
+				<fieldset>
+					<legend>Profile Information</legend>
+					<ul class="form">
+						<li id="row_"><label class="" for="first_name">名字</label><input type="text" class="required mark_empty" style="width:250px" rel="First Name" id="first_name" name="first_name" value="" />&nbsp;&nbsp;<input type="text" class="required mark_empty" style="width:250px" rel="Last Name" id="last_name" name="last_name" value="" /></li>
+					</ul>
+				</fieldset>
+				<div class="submit">
+					<input type="submit" class="button" name="go_member" value="保存用户" />
+				</div>
+			</form>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

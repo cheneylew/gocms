@@ -66,7 +66,26 @@ func CreateMenus() []*Menu {
 		Icon:"",
 		Url:"/admincp/home",
 		IsActive:false,
-		Chirldren:nil,
+		Chirldren:[]*Menu{
+			&Menu{
+				MenuID:31,
+				ParentId:3,
+				Name:"管理用户",
+				Icon:"",
+				Url:"/admincp/users",
+				IsActive:true,
+				Chirldren:nil,
+			},
+			&Menu{
+				MenuID:31,
+				ParentId:3,
+				Name:"添加用户",
+				Icon:"",
+				Url:"/admincp/users/add",
+				IsActive:true,
+				Chirldren:nil,
+			},
+		},
 	}
 	menus = append(menus, item)
 

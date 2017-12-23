@@ -50,7 +50,7 @@ func (db *DataBase)GetUsers() []*models.User {
 	var models []*models.User
 	qs := db.Orm.QueryTable("User")
 
-	_, err := qs.All(&models)
+	_, err := qs.RelatedSel("UserRole").All(&models)
 	if err != nil {
 		return nil
 	}

@@ -1,0 +1,114 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<ul class="module_links">
+				<li>
+					<a href="http://localhost/hero/admincp/users/add">添加用户/管理员</a>
+				</li>
+				<li>
+					<a href="http://localhost/hero/admincp/users/configure_list">配置用户列表</a>
+				</li>
+			</ul>
+			<h1>管理用户</h1>
+			<form id="dataset_form" method="get" action="http://localhost/hero/admincp/users/index" rel="http://localhost/hero/admincp/users/index">
+				<input type="hidden" id="submit_ready" name="submit_ready" value="" />
+				<input type="hidden" name="limit" value="50" />
+				<input type="hidden" id="filters" name="filters" value="596a6f774f773d3d" />
+				<input type="hidden" id="export" name="export" value="" />
+				<input type="hidden" id="sort_column" name="sort_column" value="" />
+				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
+				<div class="pagination">
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/users/send_email" name="action_1" value="发邮件" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/users/suspend" name="action_2" value="暂停" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/users/unsuspend" name="action_3" value="退出" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/users/delete" name="action_4" value="删除" />&nbsp;</div>
+					<div class="apply_filters"><input type="submit" class="button tooltip" title="Only show results matching the filter criteria you have entered/selected at the top of the dataset." name="filter_dataset" value="过滤结果" />&nbsp;&nbsp;<input id="reset_filters" type="reset" name="reset_filters" class="button tooltip" title="Show all results in this dataset" value="清除过滤" />&nbsp;&nbsp;<input id="dataset_export_button" type="button" name="" class="button tooltip" title="Export all dataset results (with ALL of their information) to a CSV file.  This file can then be imported into an application like Excel." value="导出" /></div>
+				</div>
+				<table class="dataset" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<td style="width:5%">&nbsp;</td>
+							<td style="width:3%">ID #</td>
+							<td style="width:">
+								<a class="sort_column tooltip" title="sort ascending" rel="user_username" direction="asc" href="#">Username</a>
+							</td>
+							<td style="width:">
+								<a class="sort_column tooltip" title="sort ascending" rel="user_email" direction="asc" href="#">Email</a>
+							</td>
+							<td style="width:">
+								<a class="sort_column tooltip" title="sort ascending" rel="user_last_name" direction="asc" href="#">Full Name</a>
+							</td>
+							<td style="width:">Groups</td>
+							<td style="width:">Status</td>
+							<td style="width:19%"></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="filters">
+							<td style="width:5%"><input type="checkbox" name="check_all" id="check_all" value="check_all" /></td>
+							<td class="filter"><input type="text" class="text id" name="id" value="" /></td>
+							<td class="filter"><input type="text" class="text" name="username" value="" /></td>
+							<td class="filter"><input type="text" class="text" name="email" value="" /></td>
+							<td class="filter"><input type="text" class="text" name="name" value="" /></td>
+							<td class="filter">
+								<select name="group">
+									<option value=""></option>
+									<option value="1">默认</option>
+								</select>
+							</td>
+							<td class="filter">
+								<select name="suspended">
+									<option value=""></option>
+									<option value="0">Active</option>
+									<option value="1">Suspended</option>
+								</select>
+							</td>
+							<td></td>
+						</tr>
+						{{range .Users}}
+						<tr>
+							<td><input type="checkbox" name="check_{{.UserId}}" value="1" class="action_items" /></td>
+							<td>{{.UserId}}</td>
+
+							<td>
+								<a href="http://localhost/hero/admincp/users/profile/{{.UserId}}">{{.Username}}</a>
+							</td>
+							<td>
+								<a href="http://localhost/hero/admincp/users/profile/{{.UserId}}">{{.UserEmail}}</a>
+							</td>
+							<td>
+								<a href="http://localhost/hero/admincp/users/profile/{{.UserId}}">{{.UserFirstName}}, {{.UserLastName}}</a>
+							</td>
+							<td>{{.UserRole.Name}}</td>
+							<td>Active</td>
+							<td class="options">
+								<input type="hidden" name="action_id" value="{{.UserId}}" />
+								<select name="action">
+									<option value="0" selected="selected"></option>
+									<option value="profile">view profile</option>
+									<option value="edit">edit profile</option>
+									<option value="add_subscription">add subscription</option>
+									<option value="invoices">invoices</option>
+									<option value="subscriptions">subscriptions</option>
+									<option value="products">product orders</option>
+									<option value="logins">login history</option>
+									<option value="suspend">suspend user</option>
+									<option value="login_to_account">login to account</option>
+								</select>
+								&nbsp;
+								<input type="submit" rel="admincp/users/user_actions" class="action button" name="go_action" value="Go" />
+							</td>
+						</tr>
+						{{end}}
+				</table>
+				<div class="pagination">
+					<div class="dataset_stats"><b>4</b> 条记录</div>
+				</div>
+			</form>
+			<div class="hidden" id="class">users</div>
+			<div class="hidden" id="method">index</div>
+			<div class="hidden" id="page">0</div>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>
