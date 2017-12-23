@@ -11,7 +11,7 @@ var GlobalConfig MYConfig
 func init() {
 	GlobalConfig = MYConfig{
 		ProductName:"Hero",
-		SupportUrl:"http://www.baidu.com/",
+		SupportUrl:"http://www.golangcms.com/",
 	}
 }
 

@@ -1,0 +1,30 @@
+<div id="header">
+    <div id="app_bar">
+        <span class="app_name"><a href="{{.BaseUrl}}" class="tooltip" title="Open the homepage of your website.">{{.Config.ProductName}}</a></span> | 控制台
+        <div id="logged_in">
+            当前登录用户: <span class="username">{{.User.Username}}</span> (
+            <a href="/admincp/logout">退出</a>)
+        </div>
+        <a id="get_support" href="{{.Config.SupportUrl}}">技术支持</a>
+    </div>
+    <div id="navigation">
+        <ul>
+            {{range .Menus}}
+            <li class="{{.Class}}">
+                <a class="parent {{if .IsActive}}active{{end}}" href="{{.Url}}?active={{.MenuID}}">{{.Name}}</a>
+                {{if .Chirldren}}
+                <ul class="children" style="display:none">
+                    {{range .Chirldren}}
+                    <li>
+                        <a rel="10" href="{{.Url}}?active={{.ParentId}}">{{.Name}}</a>
+                    </li>
+                    {{end}}
+                </ul>
+                {{end}}
+            </li>
+            {{end}}
+        </ul>
+        <div style="clear: both"></div>
+    </div>
+    <div style="clear: both"></div>
+</div>

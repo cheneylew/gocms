@@ -17,6 +17,19 @@ func (c *AdminCPController) Prepare() {
 	c.Layout = "admin/layout.html"
 	c.Data["Title"] = conf.GlobalConfig.ProductName+" | 控制台"
 
+	menus := models.CreateMenus()
+	activedMenuId, _ := c.GetInt64("active",0)
+	if activedMenuId > 0 {
+		for i := 0; i < len(menus); i++ {
+			if menus[i].MenuID == activedMenuId {
+				menus[i].IsActive = true
+			} else {
+				menus[i].IsActive = false
+			}
+		}
+	}
+	c.Data["Menus"] = menus
+
 	//登陆检测
 	urlPath := c.Ctx.Request.URL.Path
 
@@ -48,6 +61,7 @@ func (c *AdminCPController) Home() {
 
 func (c *AdminCPController) Login() {
 	c.TplName = "admin/login.html"
+	c.Data["IsLogin"] = true
 
 	if c.IsPost() {
 		username := c.GetString("username")
@@ -58,20 +72,22 @@ func (c *AdminCPController) Login() {
 			c.SaveUser(user)
 			c.RedirectWithURLError("/admincp/home","登陆成功！")
 		} else {
-			c.SetError("用户名和密码不匹配")
+			c.SetError("用户名和密码不匹配", false)
 		}
 	}
 }
 
 func (c *AdminCPController) Regist() {
 	c.TplName = "admin/regist.html"
+	c.Data["IsLogin"] = true
+
 	if c.IsPost() {
 		username := c.GetString("username")
 		password := c.GetString("password")
 
 		user := database.DB.GetUserWithEmailOrUsername(username)
 		if user != nil {
-			c.SetError("用户已存在")
+			c.SetError("用户已存在", false)
 			return ;
 		}
 
@@ -90,11 +106,11 @@ func (c *AdminCPController) Regist() {
 		a, e := database.DB.Orm.Insert(newUser)
 		if e != nil || a == 0 {
 			utils.JJKPrintln(e)
-			c.SetError("注册用户失败")
+			c.SetError("注册用户失败", false)
 			return
 		}
 
-		c.SetError("注册用户成功")
+		c.SetError("注册用户成功", true)
 	}
 }
 

@@ -31,7 +31,7 @@ func (c *BaseController) Prepare() {
 
 	error := c.GetString("msg")
 	if len(error) > 0 {
-		c.SetError(error)
+		c.SetError(error, true)
 	}
 
 	c.Layout = "layout.html"
@@ -46,8 +46,12 @@ func (c *BaseController) Prepare() {
 	}
 }
 
-func (c *BaseController) SetError(error string) {
-	c.Data["Error"] = fmt.Sprintf("<div class=\"error\">%s.</div>",error)
+func (c *BaseController) SetError(error string, isNotice bool) {
+	if isNotice {
+		c.Data["Error"] = fmt.Sprintf("<div class=\"notice\">%s</div>",error)
+	} else {
+		c.Data["Error"] = fmt.Sprintf("<div class=\"error\">%s</div>",error)
+	}
 }
 
 func (c *BaseController) RedirectWithURLError(url, error string) {

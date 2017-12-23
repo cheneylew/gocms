@@ -1,3 +1,10 @@
 {{template "admin/header.html" .}}
+
+{{if .IsLogin}}
+{{else}}
+{{template "admin/navigation.html" .}}
+{{end}}
+
 {{.LayoutContent}}
+
 {{template "admin/footer.html" .}}

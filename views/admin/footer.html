@@ -1,5 +1,16 @@
+
+{{if .IsLogin}}
 <div id="copyright">
     版权所有@ <a href="{{.Config.SupportUrl}}">{{.Config.ProductName}}</a>.
 </div>
+
+{{else}}
+<div id="footer">
+    版权所有@
+    <a href="">Hero</a> v3.76. </div>
+<div class="hidden" id="base_url">http://localhost/hero/admincp/</div>
+<div class="hidden" id="site_url">http://localhost/hero/</div>
+<div class="hidden" id="current_url">http://localhost/hero/admincp</div>
+{{end}}
 </body>
 </html>
