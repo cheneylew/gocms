@@ -1,0 +1,95 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<h1>创建新内容模型</h1>
+			<form class="form validate" enctype="multipart/form-data" id="form_type" method="post" action="/admincp/types/new">
+
+				<fieldset>
+					<legend>New Content Type</legend>
+					<ul class="form">
+						<li id="row_"><label class="full" for="name">名称</label></li>
+						<li><input type="text" class="text required full" placeholder="e.g., News Articles" style="width:100%" name="name" rel="" id="name" value="" /></li>
+						</li>
+						<li>
+							<div class="help" style="margin-left:0">输入此类型内容的名称。</div>
+						</li>
+					</ul>
+				</fieldset>
+				<fieldset>
+					<legend>Options</legend>
+					<ul class="form">
+						<li id="row_"><label class="" for="is_standard">标准页字段？</label><input type="checkbox" id="is_standard" name="is_standard" class="" value="1" checked="checked" /></li>
+						</li>
+						<li>
+							<div class="help">如果选中，每个内容项将具有以下字段：“标题”，“URL路径”和“主题”。这些是允许Hero将此内容显示为单个网页，包括在博客/主题列表等中的标准项目。</div>
+						</li>
+						<li id="row_"><label class="" for="is_privileged">仅限某些成员组？</label><input type="checkbox" id="is_privileged" name="is_privileged" class="" value="1" checked="checked" /></li>
+						</li>
+						<li>
+							<div class="help">如果选中，您将能够指定有权查看此内容（或将其设为公开）的成员组。</div>
+						</li>
+					</ul>
+				</fieldset>
+				<fieldset>
+					<legend>Design</legend>
+					<ul class="form">
+						<li id="row_"><label class="" for="template">输出模板</label>
+							<select name="template" class="required">
+								<option value="account_templates/cancel_subscription.thtml">account_templates/cancel_subscription.thtml</option>
+								<option value="account_templates/change_password.thtml">account_templates/change_password.thtml</option>
+								<option value="account_templates/forgot_password.thtml">account_templates/forgot_password.thtml</option>
+								<option value="account_templates/forgot_password_complete.thtml">account_templates/forgot_password_complete.thtml</option>
+								<option value="account_templates/home.thtml">account_templates/home.thtml</option>
+								<option value="account_templates/invoice.thtml">account_templates/invoice.thtml</option>
+								<option value="account_templates/invoices.thtml">account_templates/invoices.thtml</option>
+								<option value="account_templates/login.thtml">account_templates/login.thtml</option>
+								<option value="account_templates/profile.thtml">account_templates/profile.thtml</option>
+								<option value="account_templates/registration.thtml">account_templates/registration.thtml</option>
+								<option value="archives.thtml">archives.thtml</option>
+								<option value="blog_post.thtml">blog_post.thtml</option>
+								<option value="checkout_templates/account.thtml">checkout_templates/account.thtml</option>
+								<option value="checkout_templates/billing_shipping.thtml">checkout_templates/billing_shipping.thtml</option>
+								<option value="checkout_templates/checkout_layout.thtml">checkout_templates/checkout_layout.thtml</option>
+								<option value="checkout_templates/complete.thtml">checkout_templates/complete.thtml</option>
+								<option value="checkout_templates/free_confirm.thtml">checkout_templates/free_confirm.thtml</option>
+								<option value="checkout_templates/payment.thtml">checkout_templates/payment.thtml</option>
+								<option value="checkout_templates/register.thtml">checkout_templates/register.thtml</option>
+								<option value="checkout_templates/shipping_method.thtml">checkout_templates/shipping_method.thtml</option>
+								<option value="content.thtml" selected="selected">content.thtml</option>
+								<option value="event.thtml">event.thtml</option>
+								<option value="events.thtml">events.thtml</option>
+								<option value="form.thtml">form.thtml</option>
+								<option value="frontpage.thtml">frontpage.thtml</option>
+								<option value="gallery.thtml">gallery.thtml</option>
+								<option value="layout.thtml">layout.thtml</option>
+								<option value="paywall.thtml">paywall.thtml</option>
+								<option value="rss_feed.txml">rss_feed.txml</option>
+								<option value="search.thtml">search.thtml</option>
+								<option value="store_cart.thtml">store_cart.thtml</option>
+								<option value="store_listing.thtml">store_listing.thtml</option>
+								<option value="store_product.thtml">store_product.thtml</option>
+								<option value="subscriptions.thtml">subscriptions.thtml</option>
+							</select>
+						</li>
+						</li>
+						<li>
+							<div class="help">主题目录中的此模板将用于显示此类型的内容。 （如果不适用，请忽略此字段。）</div>
+						</li>
+						<li id="row_"><label class="" for="base_url">Base URL Path</label><input type="text" class="text" placeholder="" style="width:250px" name="base_url" rel="" id="base_url" value="" /></li>
+						</li>
+						<li>
+							<div class="help">（可选）如果设置了此值，则您为每个内容创建网址的“网址路径”框将预先加载一个文件夹，该文件夹将统一此类型的所有内容。例如，将此设置为“articles /”将有助于您为此类型的内容（如“articles / my_article”，“articles / my_other_article”等）创建所有网址。</div>
+						</li>
+					</ul>
+				</fieldset>
+				<div class="submit">
+					<input type="submit" class="button" name="go_type" value="继续为此类型创建输入字段" />
+				</div>
+			</form>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

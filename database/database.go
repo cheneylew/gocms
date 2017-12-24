@@ -10,7 +10,8 @@ import (
 var DB DataBase
 
 func init() {
-	db := beego.InitRegistDB("cheneylew","12344321","47.91.151.207","3308","gocms")
+	//db := beego.InitRegistDB("cheneylew","12344321","47.91.151.207","3308","gocms")
+	db := beego.InitRegistDB("root","cnldj1988","127.0.0.1","3306","gocms")
 	DB = DataBase{
 		BaseDataBase:*db,
 	}
@@ -51,6 +52,30 @@ func (db *DataBase)GetUsers() []*models.User {
 	qs := db.Orm.QueryTable("User")
 
 	_, err := qs.RelatedSel("UserRole").All(&models)
+	if err != nil {
+		return nil
+	}
+
+	return models
+}
+
+func (db *DataBase)GetUserLogins() []*models.UserLogins {
+	var models []*models.UserLogins
+	qs := db.Orm.QueryTable("UserLogins")
+
+	_, err := qs.RelatedSel("User").Limit(30,0).All(&models)
+	if err != nil {
+		return nil
+	}
+
+	return models
+}
+
+func (db *DataBase)GetContentTypes() []*models.ContentType {
+	var models []*models.ContentType
+	qs := db.Orm.QueryTable("ContentType")
+
+	_, err := qs.All(&models)
 	if err != nil {
 		return nil
 	}

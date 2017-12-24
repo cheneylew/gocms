@@ -8,8 +8,7 @@ import (
 )
 
 func MockMain()  {
-	roleCount := database.DB.DBBaseTableCount("user_role")
-	if roleCount == 0 {
+	if database.DB.DBBaseTableCount("user_role") == 0 {
 		var role *models.UserRole
 		role = &models.UserRole{
 			Name:"普通用户",
@@ -30,8 +29,7 @@ func MockMain()  {
 		database.DB.Orm.Insert(role)
 	}
 
-	userCount := database.DB.DBBaseTableCount("user")
-	if userCount == 0 {
+	if database.DB.DBBaseTableCount("user") == 0 {
 		var obj *models.User
 		obj = &models.User{
 			Username:"cheneylew",
@@ -49,4 +47,15 @@ func MockMain()  {
 		a, err := database.DB.Orm.Insert(obj)
 		utils.JJKPrintln(a, err)
 	}
+
+	if database.DB.DBBaseTableCount("language") == 0 {
+		database.DB.Orm.InsertMulti(3, []*models.Language{&models.Language{Name:"简体中文"},&models.Language{Name:"繁体中文"},&models.Language{Name:"English"}})
+	}
+
+	//ctype := &models.ContentType{
+	//	SystemName:"book",
+	//	Name:"Book",
+	//	IsStandard:false,
+	//}
+	//database.DB.Orm.Insert(ctype)
 }

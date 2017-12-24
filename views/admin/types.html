@@ -1,0 +1,61 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<ul class="module_links">
+				<li>
+					<a href="/admincp/types/new">新内容模型</a>
+				</li>
+			</ul>
+			<h1>内容模型</h1>
+			<form id="dataset_form" method="get" action="http://localhost/hero/admincp/publish/types" rel="http://localhost/hero/admincp/publish/types">
+				<input type="hidden" id="submit_ready" name="submit_ready" value="" />
+				<input type="hidden" name="limit" value="1000" />
+				<input type="hidden" id="filters" name="filters" value="596a6f774f773d3d" />
+				<input type="hidden" id="export" name="export" value="" />
+				<input type="hidden" id="sort_column" name="sort_column" value="" />
+				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
+				<div class="pagination">
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/types_delete" name="action_1" value="Delete" />&nbsp;</div>
+				</div>
+				<table class="dataset" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<td style="width:5%">&nbsp;</td>
+							<td style="width:5%">ID #</td>
+							<td style="width:25%">Name</td>
+							<td style="width:15%">System Name</td>
+							<td style="width:15%">Standard Content</td>
+							<td style="width:15%">Member Privileges</td>
+							<td style="width:25%"></td>
+						</tr>
+					</thead>
+					<tbody>
+						{{range .ContentTypes}}
+						<tr>
+							<td><input type="checkbox" name="check_{{.ContentTypeId}}" value="1" class="action_items" /></td>
+							<td>{{.ContentTypeId}}</td>
+							<td>{{.Name}}</td>
+							<td>{{.SystemName}}</td>
+							<td>{{if .IsStandard}}YES{{else}}NO{{end}}</td>
+							<td>Yes</td>
+							<td class="options">
+								<a href="http://localhost/hero/admincp/publish/type_edit/10">编辑</a>
+								<a href="http://localhost/hero/admincp/publish/type_fields/10">管理字段</a>
+							</td>
+						</tr>
+						{{end}}
+				</table>
+				<div class="pagination">
+					<div class="dataset_stats"><b>3</b> 条记录</div>
+				</div>
+			</form>
+			<div class="hidden" id="class">publish</div>
+			<div class="hidden" id="method">types</div>
+			<div class="hidden" id="page">0</div>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

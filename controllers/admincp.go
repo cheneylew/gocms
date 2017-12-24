@@ -58,12 +58,17 @@ func (c *AdminCPController) Index() {
 func (c *AdminCPController) Home() {
 	c.TplName = "admin/dashboard.html"
 	c.AddCSS("dashboard.css")
+	//c.AddJS("dashboard.js")
+
+	c.Data["UserLogins"] = database.DB.GetUserLogins()
 }
 
 func (c *AdminCPController) Login() {
 	c.AddCSS("login.css")
 	c.TplName = "admin/login.html"
 	c.Data["IsLogin"] = true
+
+	utils.JJKPrintln(c.Ctx.Request.Header.Get("User-Agent"))
 
 	if c.IsPost() {
 		username := c.GetString("username")
@@ -75,6 +80,17 @@ func (c *AdminCPController) Login() {
 		}
 		md5Password := utils.MD5(password+user.UserSalt)
 		if md5Password == user.Password {
+			//login history
+			login := &models.UserLogins{
+				User:user,
+				UserLoginDate:time.Now(),
+				UserLoginIp:c.Ctx.Request.RemoteAddr,
+				UserLoginBrowser:c.Ctx.Request.Header.Get("User-Agent"),
+
+			}
+			database.DB.Orm.Insert(login)
+
+			//session
 			c.SaveUser(user)
 			c.RedirectWithURLError("/admincp/home","登陆成功！")
 		} else {
@@ -85,6 +101,7 @@ func (c *AdminCPController) Login() {
 
 func (c *AdminCPController) Regist() {
 	c.TplName = "admin/regist.html"
+	c.AddCSS("login.css")
 	c.Data["IsLogin"] = true
 
 	if c.IsPost() {
@@ -180,4 +197,40 @@ func (c *AdminCPController) Users() {
 
 		c.Data["Users"] = database.DB.GetUsers()
 	}
+}
+
+func (c *AdminCPController) Types() {
+	fun := c.Path(2)
+	if fun == "new" {
+		c.TplName = "admin/types_new.html"
+		if c.IsPost() {
+			isPrivileged, _ := c.GetBool("is_privileged", false)
+			template := c.GetString("template","")
+			baseUrl := c.GetString("base_url","")
+			name := c.GetString("name","")
+			isStandard, _ := c.GetBool("is_standard", false)
+
+			contentType := &models.ContentType{
+				SystemName:utils.SnakeString(name),
+				Name:utils.UpperFirstChar(name),
+				IsPrivileged:isPrivileged,
+				IsStandard:isStandard,
+				BaseUrl:baseUrl,
+				Template:template,
+			}
+
+			a, e := database.DB.Orm.Insert(contentType)
+			if e != nil || a == 0 {
+				c.SetError("创建失败", false)
+			} else {
+				c.SetError("创建成功", true)
+			}
+		}
+	} else {
+		c.TplName = "admin/types.html"
+		c.AddCSS("dataset.css")
+		c.Data["ContentTypes"] = database.DB.GetContentTypes()
+	}
+
+
 }

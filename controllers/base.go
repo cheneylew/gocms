@@ -33,7 +33,13 @@ func (c *BaseController) Prepare() {
 		utils.JJKPrintln(forms)
 		codes := ""
 		for key, _ := range c.PostForm() {
-			codes += fmt.Sprintf("%s := c.GetString(\"%s\",\"\")\n", utils.LowerFirstChar(utils.CamelString(key)), key)
+			varKey := utils.LowerFirstChar(utils.CamelString(key))
+			if strings.Contains(key,"is") {
+				codes += fmt.Sprintf("%s, _ := c.GetBool(\"%s\", false)\n", varKey, key)
+			} else {
+				codes += fmt.Sprintf("%s := c.GetString(\"%s\",\"\")\n", varKey, key)
+			}
+
 		}
 		utils.JJKPrintln(codes)
 	}

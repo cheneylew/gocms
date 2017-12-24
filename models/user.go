@@ -27,5 +27,13 @@ type User struct {
 	UserSex int 					//0 男 1女
 }
 
+type UserLogins struct {
+	UserLoginsId int64 `orm:"pk;auto"`
+	User *User `orm:"rel(fk)"`
+	UserLoginDate time.Time
+	UserLoginIp string
+	UserLoginBrowser string
+}
+
 
 

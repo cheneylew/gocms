@@ -1,80 +1,89 @@
 <div id="wrapper">
-    <div id="content">
-        <div id="box-top-right"></div>
-        <div id="box-bottom-left"></div>
-        <div id="box-bottom-right"></div>
-        <div id="box-content">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
 
-            <div id="dash_left">
+			<div id="dash_left">
 
-                <div id="site_activity">
-                    <div id="update_status">
-                        Last update: 7:15pm
-                    </div>
-                    <h2>近期活动</h2>
-                    <ul id="activity_list">
-                    </ul>
-                </div>
+				<div id="site_activity">
+					<div id="update_status">
+						Last update: 7:15pm
+					</div>
+					<h2>近期活动</h2>
+					<ul id="activity_list">
+                        {{range .UserLogins}}
+						<li>
+							<div class="date">{{date .UserLoginDate "Y-m-d H:i:s"}}</div>
+							<div class="message">
+								<a href="">{{.User.Username}} login from {{.UserLoginIp}}</a>
+							</div>
+							<div style="clear:both"></div>
+						</li>
+                        {{end}}
+					</ul>
+				</div>
 
-            </div>
+			</div>
 
-            <div id="dash_right">
+			<div id="dash_right">
 
-                <div class="quick_publish">
-                    <ul>
-                        <li>
-                            <a href="http://localhost/hero/admincp/publish/create_post/11">&#43; 发布 Blog</a>
-                        </li>
-                        <li>
-                            <a href="http://localhost/hero/admincp/publish/create_post/10">&#43; 发布 News</a>
-                        </li>
-                    </ul>
-                    <a class="more" href="http://localhost/hero/admincp/publish/create">发布其它类型文章 &gt;</a>
-                </div>
+				<div class="quick_publish">
+					<ul>
+						<li>
+							<a href="http://localhost/hero/admincp/publish/create_post/11">&#43; 发布 Blog</a>
+						</li>
+						<li>
+							<a href="http://localhost/hero/admincp/publish/create_post/10">&#43; 发布 News</a>
+						</li>
+					</ul>
+					<a class="more" href="http://localhost/hero/admincp/publish/create">发布其它类型文章 &gt;</a>
+				</div>
 
-                <div class="dash_box system">
-                    <h3>系统状态</h3>
-                    <div class="contents">
-                        <table style="width: 100%" class="system">
-                            <tr>
-                                <td style="width: 40%"><strong>PHP</strong></td>
-                                <td style="width:60%">5.3.29</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 40%"><strong>MySQL</strong></td>
-                                <td style="width:60%">5.5.42</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 40%"><strong>Hero</strong></td>
-                                <td style="width:60%">3.76</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 40%"><strong>Theme</strong></td>
-                                <td style="width:60%">electric</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+				<div class="dash_box system">
+					<h3>系统状态</h3>
+					<div class="contents">
+						<table style="width: 100%" class="system">
+							<tr>
+								<td style="width: 40%"><strong>PHP</strong></td>
+								<td style="width:60%">5.3.29</td>
+							</tr>
+							<tr>
+								<td style="width: 40%"><strong>MySQL</strong></td>
+								<td style="width:60%">5.5.42</td>
+							</tr>
+							<tr>
+								<td style="width: 40%"><strong>Hero</strong></td>
+								<td style="width:60%">3.76</td>
+							</tr>
+							<tr>
+								<td style="width: 40%"><strong>Theme</strong></td>
+								<td style="width:60%">electric</td>
+							</tr>
+						</table>
+					</div>
+				</div>
 
-                <div class="dash_box app_details">
-                    <h3>Hero</h3>
-                    <div class="contents">
-                        <ul>
-                            <li>
-                                <a href="http://www.heroframework.com/">Hero</a>
-                            </li>
-                            <li>
-                                <a href="http://www.heroframework.com/support">Support &amp; Documentation</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+				<div class="dash_box app_details">
+					<h3>Hero</h3>
+					<div class="contents">
+						<ul>
+							<li>
+								<a href="http://www.heroframework.com/">Hero</a>
+							</li>
+							<li>
+								<a href="http://www.heroframework.com/support">Support &amp; Documentation</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 
-            </div>
+			</div>
 
-            <div style="clear:both"></div>
+			<div style="clear:both"></div>
 
-        </div>
-        <div id="box-bottom"></div>
-    </div>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
 </div>

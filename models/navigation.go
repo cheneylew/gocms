@@ -54,6 +54,15 @@ func CreateMenus() []*Menu {
 				IsActive:true,
 				Chirldren:nil,
 			},
+			&Menu{
+				MenuID:11,
+				ParentId:2,
+				Name:"内容模型",
+				Icon:"",
+				Url:"/admincp/types",
+				IsActive:true,
+				Chirldren:nil,
+			},
 		},
 	}
 	menus = append(menus, item)
