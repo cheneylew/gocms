@@ -83,6 +83,18 @@ func (db *DataBase)GetContentTypes() []*models.ContentType {
 	return models
 }
 
+func (db *DataBase)GetContentTypeWithId(contentTypeId int64) *models.ContentType {
+	var models []*models.ContentType
+	qs := db.Orm.QueryTable("ContentType")
+
+	a, err := qs.Filter("ContentTypeId", contentTypeId).All(&models)
+	if err != nil || a == 0 {
+		return nil
+	}
+
+	return models[0]
+}
+
 func (db *DataBase)GetUserRoles() []*models.UserRole {
 	var models []*models.UserRole
 	qs := db.Orm.QueryTable("UserRole")

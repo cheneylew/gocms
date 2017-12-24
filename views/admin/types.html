@@ -42,8 +42,8 @@
 							<td>{{if .IsStandard}}YES{{else}}NO{{end}}</td>
 							<td>Yes</td>
 							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/type_edit/10">编辑</a>
-								<a href="http://localhost/hero/admincp/publish/type_fields/10">管理字段</a>
+								<a href="/admincp/types/edit/{{.ContentTypeId}}">编辑</a>
+								<a href="/admincp/types/manage/{{.ContentTypeId}}">管理字段</a>
 							</td>
 						</tr>
 						{{end}}

@@ -1,0 +1,65 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<ul class="module_links"><li><a href="javascript:history.go(-1)">Go Back</a></li></ul><h1>New Custom Field</h1>
+			<form class="form validate" id="go_field" method="post" action="http://localhost/hero/admincp/custom_fields/post/new">
+				<input type="hidden" name="area" value="publish" />
+				<input type="hidden" name="custom_field_group_id" value="25" />
+				<input type="hidden" name="table" value="names" />
+
+
+				<fieldset>
+					<legend>Basic Details</legend>
+					<ul class="form">
+						<li class="full">
+							<label for="name" class="full">Name</label>
+						</li>
+						<li class="full">
+							<input type="text" class="text full required" name="name" id="name" value="" />
+						</li>
+						<li class="full">
+							<div class="help" style="margin-left: 0px">Give the full name of the field (e.g, "School Name", "CV Upload").</div>
+						</li>
+						<li>
+							<label for="type" class="full">Fieldtype</label>
+						</li>
+						<li>
+							<select name="type" id="type">
+								<option value="checkbox">Checkbox</option>
+								<option value="relationship">Content Relationship</option>
+								<option value="date">Date</option>
+								<option value="datetime">Date &amp; Time</option>
+								<option value="embed_content">Embed Content</option>
+								<option value="file_list">File List</option>
+								<option value="file_upload">File Upload</option>
+								<option value="gallery">Gallery</option>
+								<option value="member_group_relationship">Member Group Relationship</option>
+								<option value="multicheckbox">Multicheckbox Options</option>
+								<option value="multiselect">Multiselect Dropdown</option>
+								<option value="radio">Radio Button</option>
+								<option value="select">Select Dropdown</option>
+								<option value="subscription_relationship">Subscription Plan Relationship</option>
+								<option value="table">Table</option>
+								<option value="text">Text</option>
+								<option value="textarea">Textarea</option>
+								<option value="topic_relationship">Topic Relationship</option>
+								<option value="wysiwyg">WYSIWYG Textarea</option>
+							</select>		</li>
+					</ul>
+				</fieldset>
+				<fieldset id="field_options">
+					<ul class="form">
+						<li>Select a Fieldtype above for more customizable options.</li>
+					</ul>
+				</fieldset>
+				<div class="submit">
+					<input type="submit" class="button" name="go_field" value="Save Custom Field" />
+				</div>
+			</form>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

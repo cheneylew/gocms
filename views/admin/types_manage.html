@@ -1,0 +1,91 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<ul class="module_links">
+				<li>
+					<a href="/admincp/fields/{{.ContentType.ContentTypeId}}">添加字段</a>
+				</li>
+				<li>
+					<a href="http://localhost/hero/admincp/custom_fields/order/25/aHR0cDovL2xvY2FsaG9zdC9oZXJvL2FkbWluY3AvcHVibGlzaC90eXBlX2ZpZWxkcy8xMg%3D%3D">Preview &amp; Arrange Fields</a>
+				</li>
+			</ul>
+			<h1>{{.ContentType.Name}}: Manage Fields</h1>
+			<form id="dataset_form" method="get" action="http://localhost/hero/admincp/publish/type_fields/12" rel="http://localhost/hero/admincp/publish/type_fields/12">
+				<input type="hidden" id="submit_ready" name="submit_ready" value="" />
+				<input type="hidden" name="limit" value="1000" />
+				<input type="hidden" id="filters" name="filters" value="596a6f774f773d3d" />
+				<input type="hidden" id="export" name="export" value="" />
+				<input type="hidden" id="sort_column" name="sort_column" value="" />
+				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
+				<div class="pagination">
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/type_fields_delete/12" name="action_1" value="Delete" />&nbsp;</div>
+				</div>
+				<table class="dataset" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr>
+							<td style="width:5%">&nbsp;</td>
+							<td style="width:5%">ID #</td>
+							<td style="width:25%">Human Name</td>
+							<td style="width:25%">System Name</td>
+							<td style="width:20%">Type</td>
+							<td style="width:25%"></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td>n/a</td>
+							<td>Title</td>
+							<td>title</td>
+							<td>text (standard page field)</td>
+							<td class="options"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>n/a</td>
+							<td>URL Path</td>
+							<td>url_path</td>
+							<td>text (standard page field)</td>
+							<td class="options"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>n/a</td>
+							<td>Topic</td>
+							<td>topic</td>
+							<td>dropdown (standard page field)</td>
+							<td class="options"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>n/a</td>
+							<td>Restricted to Member Group(s)</td>
+							<td>member_group_access</td>
+							<td>dropdown</td>
+							<td class="options"></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" name="check_61" value="1" class="action_items" /></td>
+							<td>61</td>
+							<td>ok</td>
+							<td>ok</td>
+							<td>checkbox</td>
+							<td class="options">
+								<a href="http://localhost/hero/admincp/publish/type_field_edit/12/61">edit</a>
+							</td>
+						</tr>
+				</table>
+				<div class="pagination">
+					<div class="dataset_stats"><b>1</b> 条记录</div>
+				</div>
+			</form>
+			<div class="hidden" id="class">publish</div>
+			<div class="hidden" id="method">type_fields</div>
+			<div class="hidden" id="page">0</div>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

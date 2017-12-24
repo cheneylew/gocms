@@ -210,8 +210,13 @@ func (c *AdminCPController) Types() {
 			name := c.GetString("name","")
 			isStandard, _ := c.GetBool("is_standard", false)
 
+			systemName := utils.SnakeString(name)
+			//创建表
+			database.DB.DBBaseCreateTableWithContentID(systemName)
+
+			//记录content type
 			contentType := &models.ContentType{
-				SystemName:utils.SnakeString(name),
+				SystemName:systemName,
 				Name:utils.UpperFirstChar(name),
 				IsPrivileged:isPrivileged,
 				IsStandard:isStandard,
@@ -226,11 +231,23 @@ func (c *AdminCPController) Types() {
 				c.SetError("创建成功", true)
 			}
 		}
+	} else if fun == "manage" {
+		c.TplName = "admin/types_manage.html"
+		c.AddCSS("dataset.css")
+
+		contentType := database.DB.GetContentTypeWithId(c.PathInt64(3))
+		c.Data["ContentType"] = contentType
+	} else if fun == "edit" {
+		c.TplName = "admin/types_manage.html"
+		c.AddCSS("dataset.css")
 	} else {
 		c.TplName = "admin/types.html"
 		c.AddCSS("dataset.css")
 		c.Data["ContentTypes"] = database.DB.GetContentTypes()
 	}
+}
 
-
+func (c *AdminCPController) Fields() {
+	c.TplName = "admin/fields_add.html"
+	c.Data["ContentType"] = database.DB.GetContentTypeWithId(c.PathInt64(2))
 }
