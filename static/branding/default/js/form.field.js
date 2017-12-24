@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 	$('#type').change(function () {
 		// place loading image
-		$('fieldset#field_options').html('<img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." />');
+		$('fieldset#field_options').html('<img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." />');
 				
 		// we have a change compatible with IE6
 		var this_type = $(this).val();

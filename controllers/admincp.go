@@ -249,5 +249,15 @@ func (c *AdminCPController) Types() {
 
 func (c *AdminCPController) Fields() {
 	c.TplName = "admin/fields_add.html"
+	c.AddJS("form.field.js")
 	c.Data["ContentType"] = database.DB.GetContentTypeWithId(c.PathInt64(2))
+}
+
+func (c *AdminCPController) Custom_fields() {
+	fun := c.Path(2)
+	if fun == "ajax_field_form" {
+		ftype := c.GetString("type","")
+		html := models.GetFieldTypeHTML(ftype)
+		c.Ctx.WriteString(html)
+	}
 }

@@ -7,7 +7,7 @@ $(document).ready(function () {
 		var selected_theme = $('select[name="theme_directory"]').val();
 		
 		// loading graphic
-		file_list.html('<p style="text-align:center"><img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." /></p>');
+		file_list.html('<p style="text-align:center"><img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." /></p>');
 		
 		$.post(base_url + 'theme/file_list', { theme : selected_theme }, function (response) {
 			file_list.html(response);
@@ -177,7 +177,7 @@ $(document).ready(function () {
 		
 		$('input[name="new_url"]').val('');
 			
-		$('div#existing_maps').html('<p style="text-align:center"><img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." /></p>');
+		$('div#existing_maps').html('<p style="text-align:center"><img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." /></p>');
 		
 		// get existing mappings
 		$.post(base_url + 'theme/get_maps', { template : this_template }, function (response) {
@@ -236,7 +236,7 @@ $(document).ready(function () {
 				
 				var old_tip = $('div#set_frontpage_help').html();
 				
-				$('div#set_frontpage_help').html('<p style="text-align:center"><img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." /></p>');
+				$('div#set_frontpage_help').html('<p style="text-align:center"><img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." /></p>');
 				
 				$.post(base_url + 'theme/set_frontpage', { template : $(this).parent().attr('rel') }, function (response) {
 					$('div#set_frontpage_help').html(old_tip).hide();

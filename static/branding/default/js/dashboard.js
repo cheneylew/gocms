@@ -40,7 +40,7 @@ function update_activity () {
 	var update_status = $('div#update_status');
 	var activity_box = $('ul#activity_list');
 	
-	update_status.html('<img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." />');
+	update_status.html('<img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." />');
 	
 	$.post(base_url + 'dashboard/activity', function (response) {
 		activity_box.html(response);	

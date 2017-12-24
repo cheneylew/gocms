@@ -69,7 +69,7 @@ $(document).ready(function () {
 		}
 		
 		// show loading
-		$('ul.members').html('<li><img src="' + site_url + 'branding/default/images/loading.gif" alt="Loading..." /></li>');
+		$('ul.members').html('<li><img src="' + site_url + 'static/branding/default/images/loading.gif" alt="Loading..." /></li>');
 		
 		// set timeout (we do this after a 100ms delay from typing)
 		if (typeof(window['timeout']) != "undefined") {
