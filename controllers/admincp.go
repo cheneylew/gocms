@@ -258,6 +258,13 @@ func (c *AdminCPController) Custom_fields() {
 	if fun == "ajax_field_form" {
 		ftype := c.GetString("type","")
 		html := models.GetFieldTypeHTML(ftype)
-		c.Ctx.WriteString(html)
+		if ftype == "checkbox" {
+			html := &models.FieldTypeCheckBox{
+				FieldType:models.FieldType{},
+			}
+			c.Ctx.WriteString(html.ToHTML())
+		} else {
+			c.Ctx.WriteString(html)
+		}
 	}
 }

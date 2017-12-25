@@ -1,5 +1,11 @@
 package models
 
+import (
+	"html/template"
+	"bytes"
+	"fmt"
+)
+
 func GetFieldTypeHTML(fieldType string) string {
 	if fieldType == "date" {
 		return `<li>
@@ -303,4 +309,74 @@ func GetFieldTypeHTML(fieldType string) string {
 	}
 
 	return ``
+}
+
+type Option struct {
+	Value string
+	Name string
+}
+type FieldTypeCheckBox struct {
+	FieldType
+}
+
+func (f *FieldTypeCheckBox)Options() []*Option {
+	return []*Option{&Option{Value:"0", Name:"Unchecked"}, &Option{Value:"1", Name:"Checked"}}
+}
+
+func (f *FieldTypeCheckBox)DefaultValue() *Option {
+	return f.Options()[0]
+}
+
+func (f *FieldTypeCheckBox)ToHTML() string {
+
+	t := template.Must(template.New("test").Parse(`<li>
+	<label for="default">Default State</label>
+	<select name="default">
+	{{range .Options}}
+	<option value="{{.Value}}" {{if eq .Value $.Option.Value}}selected="selected"{{end}}>{{.Name}}</option>
+	{{end}}
+	</select>
+	</li>`))
+	mp := make(map[string]interface{}, 0)
+	mp["Options"] = f.Options()
+	mp["Option"] = f.DefaultValue()
+
+	buf := bytes.NewBufferString("")
+	t.Execute(buf, mp)
+
+	return buf.String()+f.HelpHTML()+f.RequiredHTML()
+}
+
+type FieldTypeDate struct {
+	FieldType
+	FutureOnly bool
+}
+
+func (f *FieldTypeDate)FutureOnlyHTML() string {
+	return fmt.Sprintf(`<li>
+						<label for="future_only">Future Only</label>
+						<input type="checkbox" name="future_only" value="%d" class="checkbox" />
+						<div class="help">Only allow future dates?</div>
+					</li>`, f.FutureOnly)
+}
+
+func (f *FieldTypeDate)ToHTML() string {
+	return f.HelpHTML()+f.FutureOnlyHTML()
+}
+
+type FieldTypeDateTime struct {
+	FieldType
+	FutureOnly bool
+}
+
+func (f *FieldTypeDateTime)FutureOnlyHTML() string {
+	return fmt.Sprintf(`<li>
+						<label for="future_only">Future Only</label>
+						<input type="checkbox" name="future_only" value="%d" class="checkbox" />
+						<div class="help">Only allow future dates?</div>
+					</li>`, f.FutureOnly)
+}
+
+func (f *FieldTypeDateTime)ToHTML() string {
+	return f.HelpHTML()+f.FutureOnlyHTML()
 }

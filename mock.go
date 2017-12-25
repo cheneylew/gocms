@@ -52,10 +52,5 @@ func MockMain()  {
 		database.DB.Orm.InsertMulti(3, []*models.Language{&models.Language{Name:"简体中文"},&models.Language{Name:"繁体中文"},&models.Language{Name:"English"}})
 	}
 
-	//ctype := &models.ContentType{
-	//	SystemName:"book",
-	//	Name:"Book",
-	//	IsStandard:false,
-	//}
-	//database.DB.Orm.Insert(ctype)
+
 }

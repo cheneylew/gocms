@@ -8,6 +8,7 @@ import (
 
 func main() {
 	MockMain()
+	//TemplateMain()
 	beego.AddFuncMap("Equal",utils.Equal)
 	beego.Run()
 }
