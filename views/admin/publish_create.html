@@ -1,0 +1,194 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<form class="form validate" id="form_create_post" enctype="multipart/form-data" method="post">
+
+				<input type="hidden" name="type" value="11" />
+
+				<input type="hidden" name="link_id" value="" />
+
+				<div class="sidebar">
+					<h2>发布选项</h2>
+
+					<div class="sidebar_content">
+						<div class="post_standard">
+							<fieldset>
+								<ul class="form">
+									<li>
+										<label for="language_id">语言</label>
+										<select name="language_id">
+											<option value="3">简体中文</option>
+											<option value="1">English</option>
+											<option value="2">繁体中文</option>
+										</select>
+
+									</li>
+									<li>
+										<label for="topics">文章话题</label>
+										<div style="float: left">
+											<div class="check_option"><input type="checkbox" name="topics[]" value="1011" /> 军事</div>
+											<div class="check_option"><input type="checkbox" name="topics[]" value="1012" /> 政治</div>
+											<div class="check_option"><input type="checkbox" name="topics[]" value="1010" /> 热点</div>
+											<div class="check_option"><input type="checkbox" name="topics[]" value="1000" /> 默认话题</div>
+										</div>
+
+									</li>
+									<li>
+										<label for="date">发布日期</label>
+										<input type="text" name="date" value="2017-12-31" style="width: 80px" class="text datetime datepick" />
+										<select name="date_hour">
+											<option value="01">1</option>
+											<option value="02">2</option>
+											<option value="03">3</option>
+											<option value="04">4</option>
+											<option value="05">5</option>
+											<option value="06">6</option>
+											<option value="07">7</option>
+											<option value="08" selected="selected">8</option>
+											<option value="09">9</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+										</select>
+										<select name="date_minute">
+											<option value="00">00</option>
+											<option value="01">01</option>
+											<option value="02">02</option>
+											<option value="03">03</option>
+											<option value="04">04</option>
+											<option value="05">05</option>
+											<option value="06">06</option>
+											<option value="07">07</option>
+											<option value="08">08</option>
+											<option value="09">09</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+											<option value="13">13</option>
+											<option value="14">14</option>
+											<option value="15">15</option>
+											<option value="16">16</option>
+											<option value="17">17</option>
+											<option value="18">18</option>
+											<option value="19" selected="selected">19</option>
+											<option value="20">20</option>
+											<option value="21">21</option>
+											<option value="22">22</option>
+											<option value="23">23</option>
+											<option value="24">24</option>
+											<option value="25">25</option>
+											<option value="26">26</option>
+											<option value="27">27</option>
+											<option value="28">28</option>
+											<option value="29">29</option>
+											<option value="30">30</option>
+											<option value="31">31</option>
+											<option value="32">32</option>
+											<option value="33">33</option>
+											<option value="34">34</option>
+											<option value="35">35</option>
+											<option value="36">36</option>
+											<option value="37">37</option>
+											<option value="38">38</option>
+											<option value="39">39</option>
+											<option value="40">40</option>
+											<option value="41">41</option>
+											<option value="42">42</option>
+											<option value="43">43</option>
+											<option value="44">44</option>
+											<option value="45">45</option>
+											<option value="46">46</option>
+											<option value="47">47</option>
+											<option value="48">48</option>
+											<option value="49">49</option>
+											<option value="50">50</option>
+											<option value="51">51</option>
+											<option value="52">52</option>
+											<option value="53">53</option>
+											<option value="54">54</option>
+											<option value="55">55</option>
+											<option value="56">56</option>
+											<option value="57">57</option>
+											<option value="58">58</option>
+											<option value="59">59</option>
+										</select>
+										<select name="date_ampm">
+											<option value="am" selected="selected">am</option>
+											<option value="pm">pm</option>
+										</select>
+
+									</li>
+								</ul>
+							</fieldset>
+						</div>
+					</div>
+					<h3>访问权限</h3>
+
+					<div class="sidebar_content">
+						<div class="post_privileges">
+							<fieldset>
+								<ul class="form">
+									<li>
+										<label for="privileges">允许的成员资格组</label>
+										<div style="float: left">
+											<div class="check_option"><input type="checkbox" name="privileges[]" value="0" checked="checked" /> 公开 / 任意成员组</div>
+											<div class="check_option"><input type="checkbox" name="privileges[]" value="1" /> 默认</div>
+										</div>
+										<div class="help">如果选择了一个或多个组，则此内容将要求此组中的用户查看它。这使你能够 对将用户移动到此群组的订阅和产品收取费用.
+										</div>
+									</li>
+								</ul>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+
+				<h1>{{.ContentType.Name}} 发布</h1>
+
+				<div style="float: left; width: 70%;">
+
+					<div class="post_title">
+						<fieldset>
+							<legend>Standard Page Elements</legend>
+							<ul class="form">
+								<li id="row_"><label class="full" for="title">标题</label></li>
+								<li><input type="text" class="text required full" placeholder="" style="width:100%" name="title" rel="" id="title" value="" /></li><input type="hidden" id="base_url" name="base_url" value="" />
+								<li id="row_"><label class="" for="url_path">URL路径</label><input type="text" class="text" placeholder="e.g., /about/contact_us" style="width:500px" name="url_path" rel="" id="url_path" value="20171231081936/810171" /></li>
+								</li>
+								<li>
+									<div class="help">如果将此字段留空，则会从上面的标题中自动生成。</div>
+								</li>
+							</ul>
+						</fieldset>
+					</div>
+
+					<div class="post_custom_fields">
+						<fieldset>
+							<legend>自定义字段</legend>
+							<ul class="form">
+								<li id="row_49">
+									<label for="body">Body</label>
+									<div style="float: left; width:  750px ">
+							<textarea type="textarea " name="body " style="width: 750px; height: 140px " id="body " class="basic wysiwyg "></textarea>
+
+					</div>
+					</li>
+							    {{range .Fields}}
+                                    {{str2html .ToInputHTML}}
+                                {{end}}
+							</ul></fieldset>		</div>
+					<div class="submit">
+						<input type="submit" class="button" name="form_create_post" value="立即发布">
+					</div>
+			</form>
+
+		</div>
+		<div style="clear:both "></div>
+
+	</div>
+	<div id="box-bottom "></div>
+</div>
+</div>

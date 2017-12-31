@@ -6,6 +6,9 @@ import (
 	"github.com/cheneylew/gocms/models"
 	"time"
 	"github.com/cheneylew/gocms/conf"
+	"strings"
+	"github.com/cheneylew/gocms/helper"
+	"fmt"
 )
 
 type AdminCPController struct {
@@ -17,7 +20,7 @@ func (c *AdminCPController) Prepare() {
 	c.Layout = "admin/layout.html"
 	c.Data["Title"] = conf.GlobalConfig.ProductName+" | 控制台"
 
-	menus := models.CreateMenus()
+	menus := helper.CreateMenus()
 	activedMenuId, _ := c.GetInt64("active",0)
 	if activedMenuId > 0 {
 		for i := 0; i < len(menus); i++ {
@@ -41,7 +44,7 @@ func (c *AdminCPController) Prepare() {
 		if c.IsLogin() {
 			c.Data["User"] = c.GetUser()
 		} else {
-			c.RedirectWithURL("/admincp/login")
+			c.RedirectWithURL(fmt.Sprintf("/admincp/login?redirect_url=%s", utils.Base64Encode(c.Ctx.Request.RequestURI)))
 		}
 	}
 }
@@ -68,7 +71,8 @@ func (c *AdminCPController) Login() {
 	c.TplName = "admin/login.html"
 	c.Data["IsLogin"] = true
 
-	utils.JJKPrintln(c.Ctx.Request.Header.Get("User-Agent"))
+	redirect_url := c.GetString("redirect_url","")
+	c.Data["redirect_url"] = redirect_url
 
 	if c.IsPost() {
 		username := c.GetString("username")
@@ -92,7 +96,12 @@ func (c *AdminCPController) Login() {
 
 			//session
 			c.SaveUser(user)
-			c.RedirectWithURLError("/admincp/home","登陆成功！")
+
+			if len(redirect_url) > 0 {
+				c.RedirectWithURL(utils.Base64Decode(redirect_url))
+			} else {
+				c.RedirectWithURLError("/admincp/home","登陆成功！")
+			}
 		} else {
 			c.SetError("用户名和密码不匹配", false)
 		}
@@ -236,6 +245,8 @@ func (c *AdminCPController) Types() {
 		c.AddCSS("dataset.css")
 
 		contentType := database.DB.GetContentTypeWithId(c.PathInt64(3))
+		fields := database.DB.GetFieldTypesWithContentTypeId(contentType.ContentTypeId)
+		c.Data["Fields"] = fields
 		c.Data["ContentType"] = contentType
 	} else if fun == "edit" {
 		c.TplName = "admin/types_manage.html"
@@ -248,9 +259,53 @@ func (c *AdminCPController) Types() {
 }
 
 func (c *AdminCPController) Fields() {
+	tableInfo := database.DB.GetContentTypeWithId(c.PathInt64(2))
 	c.TplName = "admin/fields_add.html"
 	c.AddJS("form.field.js")
-	c.Data["ContentType"] = database.DB.GetContentTypeWithId(c.PathInt64(2))
+	c.Data["ContentType"] = tableInfo
+
+	if c.IsPost() {
+		isRequired, _ := c.GetBool("required",false)
+		fieldName := c.GetString("name","")
+		helpText := c.GetString("help","")
+		fieldType := c.GetString("type","")
+		fieldTypeDefaultValue := c.GetString("default","")
+
+		systemName := utils.SnakeString(fieldName)
+
+		a := database.DB.GetFieldTypesWithContentTypeId(tableInfo.ContentTypeId)
+
+		isExist := false
+
+		for _, value := range a {
+			if value.Name == systemName {
+				isExist = true
+			}
+		}
+
+		if isExist {
+			c.SetError("该字段名称已存在", false)
+			return
+		}
+
+		model := &models.FieldType{
+			ContentType:tableInfo,
+			SystemName:systemName,
+			Name:fieldName,
+			Help:helpText,
+			Type:fieldType,
+			Required:isRequired,
+			DefaultValue:fieldTypeDefaultValue,
+		}
+
+		database.DB.DBBaseAddColumnTinyInt(tableInfo.SystemName, systemName)
+		_, err := database.DB.Orm.Insert(model)
+		if err != nil {
+			utils.JJKPrintln(err)
+		} else {
+			utils.JJKPrintln("field add ok!")
+		}
+}
 }
 
 func (c *AdminCPController) Custom_fields() {
@@ -265,6 +320,55 @@ func (c *AdminCPController) Custom_fields() {
 			c.Ctx.WriteString(html.ToHTML())
 		} else {
 			c.Ctx.WriteString(html)
+		}
+	}
+}
+
+func (c *AdminCPController) Dataset() {
+	fun := c.Path(2)
+	if fun == "prep_actions" {
+		//删除字段请求
+		items := c.GetString("items","")
+		//returnUrl := c.GetString("return_url","")
+		for _, value := range strings.Split(items, "&") {
+			kv := strings.Split(value, "=")
+			if len(kv) == 2 {
+				fieldTypeId := utils.JKStrToInt64(kv[1])
+				fieldType := database.DB.GetFieldTypesWithFieldTypeID(fieldTypeId)
+				database.DB.Orm.Delete(fieldType)
+				database.DB.DBBaseDropColumn(fieldType.ContentType.SystemName, fieldType.SystemName)
+			}
+		}
+
+		c.Ctx.WriteString("ok")
+	}
+}
+
+func (c *AdminCPController) Publish() {
+	fun := c.Path(2)
+
+	contentTypeId := c.PathInt64(3)
+	c.Data["ContentType"] = database.DB.GetContentTypeWithId(contentTypeId)
+
+	if fun == "manage" {
+		c.TplName = "admin/publish_manage.html"
+		c.AddCSS("dataset.css")
+
+
+	} else if fun == "create" {
+		c.TplName = "admin/publish_create.html"
+		c.AddCSS("dataset.css")
+		c.AddCSS("datepicker.css")
+		c.AddJS("ckeditor/ckeditor.js")
+		c.AddJS("ckeditor/adapters/jquery.js")
+		c.AddJS("date.js")
+		c.AddJS("datePicker.js")
+
+		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
+		c.Data["Fields"] = fieldTypes
+
+		if c.IsPost() {
+			c.SetError("发布成功", true)
 		}
 	}
 }

@@ -13,7 +13,7 @@
 				</li>
 			</ul>
 			<h1>{{.ContentType.Name}}: Manage Fields</h1>
-			<form id="dataset_form" method="get" action="http://localhost/hero/admincp/publish/type_fields/12" rel="http://localhost/hero/admincp/publish/type_fields/12">
+			<form id="dataset_form" method="get" action="/admincp/types/manage/{{.ContentType.ContentTypeId}}" rel="/admincp/types/manage/{{.ContentType.ContentTypeId}}">
 				<input type="hidden" id="submit_ready" name="submit_ready" value="" />
 				<input type="hidden" name="limit" value="1000" />
 				<input type="hidden" id="filters" name="filters" value="596a6f774f773d3d" />
@@ -21,7 +21,7 @@
 				<input type="hidden" id="sort_column" name="sort_column" value="" />
 				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
 				<div class="pagination">
-					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/type_fields_delete/12" name="action_1" value="Delete" />&nbsp;</div>
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="/admincp/types/manage/{{.ContentType.ContentTypeId}}" name="action_1" value="Delete" />&nbsp;</div>
 				</div>
 				<table class="dataset" cellpadding="0" cellspacing="0">
 					<thead>
@@ -67,16 +67,18 @@
 							<td>dropdown</td>
 							<td class="options"></td>
 						</tr>
+						{{range .Fields}}
 						<tr>
-							<td><input type="checkbox" name="check_61" value="1" class="action_items" /></td>
-							<td>61</td>
-							<td>ok</td>
-							<td>ok</td>
-							<td>checkbox</td>
+							<td><input type="checkbox" name="check_{{.FieldTypeId}}" value="{{.FieldTypeId}}" class="action_items" /></td>
+							<td>{{.FieldTypeId}}</td>
+							<td>{{.Name}}</td>
+							<td>{{.SystemName}}</td>
+							<td>{{.Type}}</td>
 							<td class="options">
 								<a href="http://localhost/hero/admincp/publish/type_field_edit/12/61">edit</a>
 							</td>
 						</tr>
+						{{end}}
 				</table>
 				<div class="pagination">
 					<div class="dataset_stats"><b>1</b> 条记录</div>

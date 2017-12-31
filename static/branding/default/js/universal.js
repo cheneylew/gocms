@@ -279,7 +279,8 @@ $(document).ready(function() {
 			
 			$.post($('#base_url').html()+'dataset/prep_actions', { items: serialized_items, return_url: return_link },
 			  function(data){
-			    window.location.href = link+'/'+data;
+				  window.location.reload();
+			    //window.location.href = link+'/'+data;
 			  });
 		}
 		return false;

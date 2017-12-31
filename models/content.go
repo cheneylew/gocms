@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 	"fmt"
+	"github.com/cheneylew/goutil/utils"
 )
 
 type FieldType struct {
@@ -10,6 +11,7 @@ type FieldType struct {
 	ContentType *ContentType `orm:"rel(fk)"`
 	SystemName string
 	Name string
+	Type string
 	Help string
 	Required bool
 	DefaultValue string
@@ -30,6 +32,21 @@ func (f *FieldType)HelpHTML() string {
 	<textarea name="help" style="width: 500px; height: 80px" class="textarea">%s</textarea>
 	<div class="help">This help text will be displayed beneath the field.  Use it to guide the user in responding correctly.</div>
 	</li>`, f.Help)
+}
+
+func (f *FieldType)ToInputHTML() string {
+	params := utils.TemplateParams()
+	params["FieldType"] = f
+
+	tplStr := ""
+	if f.Type == "checkbox" {
+		tplStr = `<li id="row_{{.FieldType.FieldTypeId}}">
+			<label for="{{.FieldType.SystemName}}">{{.FieldType.SystemName}}</label>
+			<input type="{{.FieldType.Type}}" name="{{.FieldType.SystemName}}" value="{{.FieldType.DefaultValue}}" class="checkbox" {{if eq .FieldType.DefaultValue "1"}}checked="checked"{{end}}>
+			</li>`
+	}
+
+	return utils.Template(tplStr, params)
 }
 
 type ContentType struct {

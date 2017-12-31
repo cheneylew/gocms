@@ -4,11 +4,11 @@
 		<div id="box-bottom-left"></div>
 		<div id="box-bottom-right"></div>
 		<div id="box-content">
-			<ul class="module_links"><li><a href="javascript:history.go(-1)">Go Back</a></li></ul><h1>New Custom Field</h1>
-			<form class="form validate" id="go_field" method="post" action="http://localhost/hero/admincp/custom_fields/post/new">
+			<ul class="module_links"><li><a href="javascript:history.go(-1)">返回</a></li></ul><h1>New Custom Field</h1>
+			<form class="form validate" id="go_field" method="post" action="/admincp/fields/{{.ContentType.ContentTypeId}}">
 				<input type="hidden" name="area" value="publish" />
 				<input type="hidden" name="custom_field_group_id" value="25" />
-				<input type="hidden" name="table" value="names" />
+				<input type="hidden" name="table" value="{{.ContentType.SystemName}}" />
 
 
 				<fieldset>

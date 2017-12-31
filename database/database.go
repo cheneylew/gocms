@@ -118,3 +118,27 @@ func (db *DataBase)GetUserRolesWithGrade(grade int64) *models.UserRole {
 
 	return models[0]
 }
+
+func (db *DataBase)GetFieldTypesWithContentTypeId(contentTypeId int64) []*models.FieldType {
+	var models []*models.FieldType
+	qs := db.Orm.QueryTable("FieldType")
+
+	_, err := qs.Filter("ContentType__ContentTypeId", contentTypeId).All(&models)
+	if err != nil || len(models) == 0{
+		return nil
+	}
+
+	return models
+}
+
+func (db *DataBase)GetFieldTypesWithFieldTypeID(fieldTypeId int64) *models.FieldType {
+	var models []*models.FieldType
+	qs := db.Orm.QueryTable("FieldType")
+
+	_, err := qs.Filter("FieldTypeId", fieldTypeId).RelatedSel().All(&models)
+	if err != nil || len(models) == 0{
+		return nil
+	}
+
+	return models[0]
+}

@@ -6,15 +6,16 @@
 <div id="login_form">
     <h1><span class="app_name">{{.Config.ProductName}}</span> | 控制台</h1>
     <form class="validate" method="post" action="/admincp/login">
+        <input name="redirect_url" value="{{.redirect_url}}" hidden>
         <ul class="form">
             <li>
                 <label for="username">用户名</label>
-                <input id="username" name="username" type="text" class="text required" />
+                <input id="username" name="username" type="text" value="admin" class="text required" />
                 <div style="clear:both"></div>
             </li>
             <li>
                 <label for="password">密  码</label>
-                <input id="password" name="password" type="password" class="text required" />
+                <input id="password" name="password" type="password" value="tough1988" class="text required" />
                 <div style="clear:both"></div>
             </li>
             <li class="submit">

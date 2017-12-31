@@ -65,6 +65,7 @@ func (c *BaseController) Prepare() {
 }
 
 func (c *BaseController) SetError(error string, isNotice bool) {
+	error = utils.Base64Decode(error)
 	if isNotice {
 		c.Data["Error"] = fmt.Sprintf("<div class=\"notice\">%s</div>",error)
 	} else {
@@ -73,7 +74,7 @@ func (c *BaseController) SetError(error string, isNotice bool) {
 }
 
 func (c *BaseController) RedirectWithURLError(url, error string) {
-	c.RedirectWithURL(url+"?msg="+error)
+	c.RedirectWithURL(url+"?msg="+utils.Base64Encode(error))
 }
 
 func (c *BaseController) AddCSS(path string) {
