@@ -65,7 +65,10 @@ func (c *BaseController) Prepare() {
 }
 
 func (c *BaseController) SetError(error string, isNotice bool) {
-	error = utils.Base64Decode(error)
+	decodeStr := utils.Base64Decode(error)
+	if len(decodeStr) > 0 {
+		error = decodeStr
+	}
 	if isNotice {
 		c.Data["Error"] = fmt.Sprintf("<div class=\"notice\">%s</div>",error)
 	} else {

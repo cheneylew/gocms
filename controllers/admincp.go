@@ -339,12 +339,23 @@ func (c *AdminCPController) Dataset() {
 	if fun == "prep_actions" {
 		//删除字段请求
 		items := c.GetString("items","")
-		//returnUrl := c.GetString("return_url","")
+		var itemIds []int64
 		for _, value := range strings.Split(items, "&") {
 			kv := strings.Split(value, "=")
 			if len(kv) == 2 {
-				fieldTypeId := utils.JKStrToInt64(kv[1])
-				fieldType := database.DB.GetFieldTypesWithFieldTypeID(fieldTypeId)
+				itemIds = append(itemIds, utils.JKStrToInt64(kv[1]))
+			}
+		}
+		//returnUrl := c.GetString("return_url","")
+		action := c.GetString("action");
+		for _, value := range itemIds {
+			if action == "delete_articles" {
+				//删除文章
+				item := database.DB.GetContentWithContentID(value)
+				database.DB.Orm.Delete(item)
+			} else if action == "delete_fieldTypes" {
+				//删除自定义字段
+				fieldType := database.DB.GetFieldTypesWithFieldTypeID(value)
 				database.DB.Orm.Delete(fieldType)
 				database.DB.DBBaseDropColumn(fieldType.ContentType.SystemName, fieldType.SystemName)
 			}
@@ -358,13 +369,15 @@ func (c *AdminCPController) Publish() {
 	fun := c.Path(2)
 
 	contentTypeId := c.PathInt64(3)
-	c.Data["ContentType"] = database.DB.GetContentTypeWithId(contentTypeId)
+	contentType := database.DB.GetContentTypeWithId(contentTypeId)
+	c.Data["ContentType"] = contentType
 
 	if fun == "manage" {
 		c.TplName = "admin/publish_manage.html"
 		c.AddCSS("dataset.css")
 
-
+		contents := database.DB.GetContents()
+		c.Data["Contents"] = contents
 	} else if fun == "create" {
 		c.TplName = "admin/publish_create.html"
 		c.AddCSS("dataset.css")
@@ -374,11 +387,100 @@ func (c *AdminCPController) Publish() {
 		c.AddJS("date.js")
 		c.AddJS("datePicker.js")
 
+		languages := database.DB.GetLanguages()
+		c.Data["Languages"] = languages
+
+		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
+		c.Data["Fields"] = fieldTypes
+		if c.IsPost() {
+			title := c.GetString("title","")
+
+			//权限
+			privileges := c.GetStrings("privileges[]")
+			privilegesJson, _ := utils.ToJSONWithSliceString(privileges)
+
+			//发布语言
+			languageId := c.GetString("language_id","")
+			language := database.DB.GetLanguageWithLanguageID(utils.JKStrToInt64(languageId))
+
+			//发布时间
+			date := c.GetString("publish_date","")
+			dateHour := c.GetString("publish_date_hour","")
+			dateMinute := c.GetString("publish_date_minute","")
+			dateAmpm := c.GetString("publish_date_ampm","")
+
+			datetimeStr := utils.ValuesToDateTime(date, dateHour, dateMinute, dateAmpm)
+			utils.JJKPrintln(datetimeStr)
+			utils.JJKPrintln(date, dateHour, dateMinute, dateAmpm, languageId, privileges, title)
+
+			content := &models.Content{
+				Language:language,
+				ContentType:contentType,
+				User:c.GetUser().(*models.User),
+				ContentDate:time.Now(),
+				ContentModified:time.Now(),
+				ContentIsStandard:contentType.IsStandard,
+				ContentTitle:title,
+				ContentPrivileges:privilegesJson,
+			}
+
+			contentId, _ := database.DB.Orm.Insert(content)
+			content.ContentId = contentId
+
+		}
+	} else if fun == "edit" {
+		c.TplName = "admin/publish_edit.html"
+		c.AddCSS("dataset.css")
+		c.AddCSS("datepicker.css")
+		c.AddJS("ckeditor/ckeditor.js")
+		c.AddJS("ckeditor/adapters/jquery.js")
+		c.AddJS("date.js")
+		c.AddJS("datePicker.js")
+
+		languages := database.DB.GetLanguages()
+		c.Data["Languages"] = languages
+
 		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
 		c.Data["Fields"] = fieldTypes
 
+		contentId := c.PathInt64(4)
+		content := database.DB.GetContentWithContentID(contentId)
+		c.Data["Content"] = content
 		if c.IsPost() {
-			c.SetError("发布成功", true)
+			title := c.GetString("title","")
+
+			//权限
+			privileges := c.GetStrings("privileges[]")
+			privilegesJson, _ := utils.ToJSONWithSliceString(privileges)
+
+			//发布语言
+			languageId := c.GetString("language_id","")
+			language := database.DB.GetLanguageWithLanguageID(utils.JKStrToInt64(languageId))
+
+			//发布时间
+			date := c.GetString("publish_date","")
+			dateHour := c.GetString("publish_date_hour","")
+			dateMinute := c.GetString("publish_date_minute","")
+			dateAmpm := c.GetString("publish_date_ampm","")
+
+			datetimeStr := utils.ValuesToDateTime(date, dateHour, dateMinute, dateAmpm)
+			utils.JJKPrintln(datetimeStr)
+			utils.JJKPrintln(date, dateHour, dateMinute, dateAmpm, languageId, privileges, title)
+
+			content := &models.Content{
+				Language:language,
+				ContentType:contentType,
+				User:c.GetUser().(*models.User),
+				ContentDate:time.Now(),
+				ContentModified:time.Now(),
+				ContentIsStandard:contentType.IsStandard,
+				ContentTitle:title,
+				ContentPrivileges:privilegesJson,
+			}
+
+			contentId, _ := database.DB.Orm.Insert(content)
+			content.ContentId = contentId
+
 		}
 	}
 }

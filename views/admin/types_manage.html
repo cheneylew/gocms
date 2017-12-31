@@ -21,7 +21,7 @@
 				<input type="hidden" id="sort_column" name="sort_column" value="" />
 				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
 				<div class="pagination">
-					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="/admincp/types/manage/{{.ContentType.ContentTypeId}}" name="action_1" value="Delete" />&nbsp;</div>
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="/admincp/types/manage/{{.ContentType.ContentTypeId}}" name="action_1" action="delete_fieldTypes" value="删除" />&nbsp;</div>
 				</div>
 				<table class="dataset" cellpadding="0" cellspacing="0">
 					<thead>

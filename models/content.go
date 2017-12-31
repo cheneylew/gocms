@@ -71,7 +71,7 @@ type Content struct {
 	ContentIsStandard bool
 	ContentTitle string
 	ContentPrivileges string
-	ContentHits string
+	ContentHits int64
 }
 
 type Language struct {

@@ -21,7 +21,7 @@
 										<label for="language_id">语言</label>
 										<select name="language_id" id="language_id">
 											{{range .Languages}}
-											<option value="{{.LanguageId}}" {{if Equal .LanguageId 1}}selected="selected"{{end}}>{{.Name}}</option>
+											<option value="{{.LanguageId}}" {{if Equal .LanguageId $.Content.Language.LanguageId}}selected="selected"{{end}}>{{.Name}}</option>
 											{{end}}
 										</select>
 
@@ -155,7 +155,7 @@
 							<legend>Standard Page Elements</legend>
 							<ul class="form">
 								<li id="row_"><label class="full" for="title">标题</label></li>
-								<li><input type="text" class="text required full" placeholder="" style="width:100%" name="title" rel="" id="title" value="" /></li><input type="hidden" id="base_url" name="base_url" value="" />
+								<li><input type="text" class="text required full" placeholder="" style="width:100%" name="title" rel="" id="title" value="{{$.Content.ContentTitle}}" /></li><input type="hidden" id="base_url" name="base_url" value="" />
 								<li id="row_"><label class="" for="url_path">URL路径</label><input type="text" class="text" placeholder="e.g., /about/contact_us" style="width:500px" name="url_path" rel="" id="url_path" value="20171231081936/810171" /></li>
 								</li>
 								<li>
@@ -172,13 +172,13 @@
 								<li id="row_49">
 									<label for="body">Body</label>
 									<div style="float: left; width:  750px ">
-							<textarea type="textarea " name="body " style="width: 750px; height: 140px " id="body " class="basic wysiwyg "></textarea>
+										<textarea type="textarea " name="body " style="width: 750px; height: 140px " id="body " class="basic wysiwyg "></textarea>
 
-					</div>
-					</li>
-							    {{range .Fields}}
-                                    {{str2html .ToInputHTML}}
-                                {{end}}
+									</div>
+								</li>
+								{{range .Fields}}
+								{{str2html .ToInputHTML}}
+								{{end}}
 							</ul></fieldset>		</div>
 					<div class="submit">
 						<input type="submit" class="button" name="form_create_post" value="立即发布">

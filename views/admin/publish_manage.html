@@ -19,7 +19,7 @@
 				<input type="hidden" id="sort_column" name="sort_column" value="" />
 				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
 				<div class="pagination">
-					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/delete" name="action_1" value="删除" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/copypage" name="action_2" value="复制" />&nbsp;</div>
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/delete" name="action_1" action="delete_articles" value="删除" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/copypage" name="action_2" action="copy_articles" value="复制" />&nbsp;</div>
 					<div class="apply_filters"><input type="submit" class="button tooltip" title="Only show results matching the filter criteria you have entered/selected at the top of the dataset." name="filter_dataset" value="过滤结果" />&nbsp;&nbsp;<input id="reset_filters" type="reset" name="reset_filters" class="button tooltip" title="Show all results in this dataset" value="清除过滤" />&nbsp;&nbsp;<input id="dataset_export_button" type="button" name="" class="button tooltip" title="Export all dataset results (with ALL of their information) to a CSV file.  This file can then be imported into an application like Excel." value="导出" /></div>
 				</div>
 				<table class="dataset" cellpadding="0" cellspacing="0">
@@ -64,109 +64,25 @@
 							<td></td>
 							<td></td>
 						</tr>
-
+						{{range .Contents}}
 						<tr>
-							<td><input type="checkbox" name="check_44" value="1" class="action_items" /></td>
-							<td>44</td>
-							<td>繁体中文</td>
+							<td><input type="checkbox" name="check_{{.ContentId}}" value="{{.ContentId}}" class="action_items" /></td>
+							<td>{{.ContentId}}</td>
+							<td>{{.Language.Name}}</td>
 							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/44">人民群众是大人物”：总理这句话由何而来？</a>
+								<a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">{{.ContentTitle}}</a>
 							</td>
-							<td>cheneylew</td>
-							<td>
-							</td>
-							<td>13-Mar-2017 02:29pm</td>
-							<td>5</td>
-							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/44">edit</a>
-								<a href="http://localhost/hero/tc/20170313142750/773467">view</a>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="check_43" value="1" class="action_items" /></td>
-							<td>43</td>
-							<td>English</td>
-							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/43">人民群众是大人物”：总理这句话由何而来？</a>
-							</td>
-							<td>cheneylew</td>
-							<td>
-							</td>
-							<td>13-Mar-2017 02:29pm</td>
-							<td>2</td>
-							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/43">edit</a>
-								<a href="http://localhost/hero/en/20170313142750/773467">view</a>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="check_42" value="1" class="action_items" /></td>
-							<td>42</td>
-							<td>简体中文</td>
-							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/42">人民群众是大人物”：总理这句话由何而来？</a>
-							</td>
-							<td>cheneylew</td>
-							<td>
-							</td>
-							<td>13-Mar-2017 02:28pm</td>
-							<td>3</td>
-							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/42">edit</a>
-								<a href="http://localhost/hero/sc/20170313142750/773467">view</a>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="check_41" value="1" class="action_items" /></td>
-							<td>41</td>
-							<td>繁体中文</td>
-							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/41">民法总则草案修改：限制民事行为能力人下限改为8岁</a>
-							</td>
-							<td>cheneylew</td>
-							<td>
-							</td>
-							<td>13-Mar-2017 02:27pm</td>
-							<td>5</td>
-							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/41">edit</a>
-								<a href="http://localhost/hero/tc/20170313135915/854364">view</a>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="check_40" value="1" class="action_items" /></td>
-							<td>40</td>
-							<td>English</td>
-							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/40">民法总则草案修改：限制民事行为能力人下限改为8岁</a>
-							</td>
-							<td>cheneylew</td>
-							<td>
-							</td>
-							<td>13-Mar-2017 02:27pm</td>
-							<td>4</td>
-							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/40">edit</a>
-								<a href="http://localhost/hero/en/20170313135915/854364">view</a>
-							</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" name="check_39" value="1" class="action_items" /></td>
-							<td>39</td>
-							<td>简体中文</td>
-							<td>
-								<a href="http://localhost/hero/admincp/publish/edit/39">民法总则草案修改：限制民事行为能力人下限改为8岁</a>
-							</td>
-							<td>cheneylew</td>
+							<td>{{.User.Username}}</td>
 							<td>
 							</td>
 							<td>13-Mar-2017 01:59pm</td>
-							<td>8</td>
+							<td>{{.ContentHits}}</td>
 							<td class="options">
-								<a href="http://localhost/hero/admincp/publish/edit/39">edit</a>
-								<a href="http://localhost/hero/sc/20170313135915/854364">view</a>
+								<a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">编辑</a>
+								<a href="/sc/20170313135915/{{.ContentId}}">查看</a>
 							</td>
 						</tr>
+						{{end}}
 				</table>
 				<div class="pagination">
 					<div class="dataset_stats"><b>6</b> 条记录</div>

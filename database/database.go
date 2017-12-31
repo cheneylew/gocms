@@ -11,11 +11,10 @@ var DB DataBase
 
 func init() {
 	//db := beego.InitRegistDB("cheneylew","12344321","47.91.151.207","3308","gocms")
-	db := beego.InitRegistDB("cheneylew","12344321","127.0.0.1","8889","gocms")
+	db := beego.InitRegistDB("root","cnldj1988","127.0.0.1","3306","gocms")
 	DB = DataBase{
 		BaseDataBase:*db,
 	}
-
 }
 
 type DataBase struct {
@@ -137,6 +136,56 @@ func (db *DataBase)GetFieldTypesWithFieldTypeID(fieldTypeId int64) *models.Field
 	qs := db.Orm.QueryTable("FieldType")
 
 	_, err := qs.Filter("FieldTypeId", fieldTypeId).RelatedSel().All(&models)
+	if err != nil || len(models) == 0{
+		return nil
+	}
+
+	return models[0]
+}
+
+func (db *DataBase)GetLanguages() []*models.Language {
+	var models []*models.Language
+	qs := db.Orm.QueryTable("Language")
+
+	_, err := qs.All(&models)
+	if err != nil {
+		return nil
+	}
+
+	return models
+}
+
+func (db *DataBase)GetLanguageWithLanguageID(languageId int64) *models.Language {
+	var models []*models.Language
+	qs := db.Orm.QueryTable("Language")
+
+	_, err := qs.Filter("LanguageId", languageId).RelatedSel().All(&models)
+	if err != nil || len(models) == 0{
+		return nil
+	}
+
+	return models[0]
+}
+
+
+func (db *DataBase)GetContents() []*models.Content {
+
+	var models []*models.Content
+	qs := db.Orm.QueryTable("Content")
+
+	_, err := qs.RelatedSel().All(&models)
+	if err != nil {
+		return nil
+	}
+
+	return models
+}
+
+func (db *DataBase)GetContentWithContentID(contentId int64) *models.Content {
+	var models []*models.Content
+	qs := db.Orm.QueryTable("Content")
+
+	_, err := qs.Filter("ContentId", contentId).RelatedSel().All(&models)
 	if err != nil || len(models) == 0{
 		return nil
 	}
