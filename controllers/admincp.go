@@ -318,6 +318,16 @@ func (c *AdminCPController) Custom_fields() {
 				FieldType:models.FieldType{},
 			}
 			c.Ctx.WriteString(html.ToHTML())
+		} else if ftype == "date" {
+			html := &models.FieldTypeDate{
+				FieldType:models.FieldType{},
+			}
+			c.Ctx.WriteString(html.ToHTML())
+		}  else if ftype == "datetime" {
+			html := &models.FieldTypeDateTime{
+				FieldType:models.FieldType{},
+			}
+			c.Ctx.WriteString(html.ToHTML())
 		} else {
 			c.Ctx.WriteString(html)
 		}
