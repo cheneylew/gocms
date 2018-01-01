@@ -75,7 +75,7 @@
 							<td>{{.User.Username}}</td>
 							<td>
 							</td>
-							<td>13-Mar-2017 01:59pm</td>
+							<td>{{date .ContentModified "Y-m-d H:i:s"}}</td>
 							<td>{{.ContentHits}}</td>
 							<td class="options">
 								<a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">编辑</a>

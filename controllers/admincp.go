@@ -358,6 +358,20 @@ func (c *AdminCPController) Dataset() {
 				fieldType := database.DB.GetFieldTypesWithFieldTypeID(value)
 				database.DB.Orm.Delete(fieldType)
 				database.DB.DBBaseDropColumn(fieldType.ContentType.SystemName, fieldType.SystemName)
+			} else if action == "delete_content_types" {
+				contentType := database.DB.GetContentTypeWithId(value)
+
+				//删除contentType
+				database.DB.Orm.Delete(contentType)
+
+				//删除content
+				types := database.DB.GetContentsWithContentTypeID(contentType.ContentTypeId)
+				for _, type1 := range types {
+					database.DB.Orm.Delete(type1)
+				}
+
+				//删除自定义表
+				database.DB.DBBaseDropTable(contentType.SystemName)
 			}
 		}
 
@@ -376,7 +390,7 @@ func (c *AdminCPController) Publish() {
 		c.TplName = "admin/publish_manage.html"
 		c.AddCSS("dataset.css")
 
-		contents := database.DB.GetContents()
+		contents := database.DB.GetContentsWithContentTypeID(contentTypeId)
 		c.Data["Contents"] = contents
 	} else if fun == "create" {
 		c.TplName = "admin/publish_create.html"
@@ -413,6 +427,7 @@ func (c *AdminCPController) Publish() {
 			utils.JJKPrintln(datetimeStr)
 			utils.JJKPrintln(date, dateHour, dateMinute, dateAmpm, languageId, privileges, title)
 
+			//主表
 			content := &models.Content{
 				Language:language,
 				ContentType:contentType,
@@ -427,6 +442,23 @@ func (c *AdminCPController) Publish() {
 			contentId, _ := database.DB.Orm.Insert(content)
 			content.ContentId = contentId
 
+			//自定义表
+			params := utils.TemplateParams()
+			params["FieldTypes"] = fieldTypes
+			params["ContentType"] = contentType
+			params["Content"] = content
+
+			sql := utils.Template("INSERT INTO `{{.ContentType.SystemName}}` (`content_id`{{range .FieldTypes}},`{{.SystemName}}`{{end}}) VALUES ({{.Content.ContentId}}{{range .FieldTypes}},?{{end}});", params)
+			var values []string
+			for _, value := range fieldTypes {
+				values = append(values, c.GetString(value.SystemName,""))
+			}
+			_, err := database.DB.DBBaseExecSQL(sql,values)
+			if err != nil {
+				utils.JJKPrintln(err)
+			}
+
+			c.SetError("添加成功", true)
 		}
 	} else if fun == "edit" {
 		c.TplName = "admin/publish_edit.html"
@@ -446,6 +478,10 @@ func (c *AdminCPController) Publish() {
 		contentId := c.PathInt64(4)
 		content := database.DB.GetContentWithContentID(contentId)
 		c.Data["Content"] = content
+
+		params, _ := database.DB.DBBaseAnyTableSelectOneRowWithContentID(contentType.SystemName, contentId)
+		utils.JJKPrintln(params)
+
 		if c.IsPost() {
 			title := c.GetString("title","")
 

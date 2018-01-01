@@ -78,3 +78,4 @@ type Language struct {
 	LanguageId int64 `orm:"pk;auto"`
 	Name string
 }
+
