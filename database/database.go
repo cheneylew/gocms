@@ -11,7 +11,7 @@ var DB DataBase
 
 func init() {
 	//db := beego.InitRegistDB("cheneylew","12344321","47.91.151.207","3308","gocms")
-	db := beego.InitRegistDB("root","cnldj1988","127.0.0.1","3306","gocms")
+	db := beego.InitRegistDB("cheneylew","12344321","127.0.0.1","13306","gocms")
 	DB = DataBase{
 		BaseDataBase:*db,
 	}

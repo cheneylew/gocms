@@ -52,5 +52,6 @@ func MockMain()  {
 		database.DB.Orm.InsertMulti(3, []*models.Language{&models.Language{Name:"简体中文"},&models.Language{Name:"繁体中文"},&models.Language{Name:"English"}})
 	}
 
-
+	//上传文件目录
+	utils.MKDir(utils.SelfDir()+"/static/upload")
 }
