@@ -6,6 +6,7 @@ import (
 	"github.com/cheneylew/gocms/conf"
 	"fmt"
 	"strings"
+	"time"
 )
 
 var BEEGO_CONFIG beego2.BeegoConfig
@@ -100,6 +101,21 @@ func (c *BaseController) AddJS(path string) {
 	} else {
 		c.Data["JS"] = append(c.Data["JS"].([]string), path)
 	}
+}
+
+func (c *BaseController) GetDateTime(key string) time.Time {
+	date := c.GetString(key,"")
+	dateHour := c.GetString(key+"_hour","")
+	dateMinute := c.GetString(key+"_minute","")
+	dateAmpm := c.GetString(key+"_ampm","")
+
+	datetime := utils.ValuesToDateTime(date, dateHour, dateMinute, dateAmpm)
+	return datetime
+}
+
+func (c *BaseController) GetDateTimeStr(key string) string {
+	datetime := c.GetDateTime(key)
+	return utils.JKTimeToString(datetime)
 }
 
 

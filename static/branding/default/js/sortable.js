@@ -12,7 +12,7 @@ $(document).ready(function(){
 	      
 	      var field_group_id = $('form#form_arrange').attr('rel');
 	      
-	      $.post($('#base_url').html() + 'custom_fields/save_order/' + field_group_id, order);
+	      $.post($('#base_url').html() + 'customfields/save_order/' + field_group_id, order);
 	      
 	      $("ul.sortable li").animate({backgroundColor:original_colour},750)
 	    } 

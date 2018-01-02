@@ -1,13 +1,33 @@
 package models
 
 import (
-	"html/template"
-	"bytes"
-	"fmt"
 )
 
-func GetFieldTypeHTML(fieldType string) string {
-	if fieldType == "date" {
+const (
+	FieldTypeStrDate = "date"
+	FieldTypeStrDatetime = "datetime"
+	FieldTypeStrCheckbox = "checkbox"
+	FieldTypeStrRelationship = "relationship"
+	FieldTypeStrEmbedContent = "embed_content"
+	FieldTypeStrFileList = "file_list"
+	FieldTypeStrFileUpload = "file_upload"
+	FieldTypeStrGallery = "gallery"
+	FieldTypeStrMemberGroupRelationship = "member_group_relationship"
+	FieldTypeStrMulticheckbox = "multicheckbox"
+	FieldTypeStrMultiselect = "multiselect"
+	FieldTypeStrRadio = "radio"
+	FieldTypeStrSelect = "select"
+	FieldTypeStrSubscriptionRelationship = "subscription_relationship"
+	FieldTypeStrTable = "table"
+	FieldTypeStrText = "text"
+	FieldTypeStrTextarea = "textarea"
+	FieldTypeStrTopicRelationship = "topic_relationship"
+	FieldTypeStrWysiwyg = "wysiwyg"
+)
+
+func (f *FieldType)RuleHTML() string {
+	fieldType := f.Type
+	if fieldType == FieldTypeStrDate {
 		return `<li>
 						<label for="help">Help Text</label>
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -17,7 +37,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="future_only" value="1" class="checkbox" />
 						<div class="help">Only allow future dates?</div>
 					</li>`
-	} else if fieldType == "checkbox" {
+	} else if fieldType == FieldTypeStrCheckbox {
 		return `<li>
 						<label for="default">Default State</label>
 						<select name="default">
@@ -34,7 +54,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, this box must be checked for the form to be processed.</div>
 					</li>`
-	} else if fieldType == "datetime" {
+	} else if fieldType == FieldTypeStrDatetime {
 		return `<li>
 						<label for="help">Help Text</label>
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -44,7 +64,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="future_only" value="1" class="checkbox" />
 						<div class="help">Only allow future dates?</div>
 					</li>`
-	} else if fieldType == "embed_content" {
+	} else if fieldType == FieldTypeStrEmbedContent {
 		return `<li>
 						<label for="content_type">Content Type</label>
 						<select name="content_type">
@@ -70,7 +90,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
 						<div class="help">This help text will be displayed beneath the field.  Use it to guide the user in responding correctly.</div>
 					</li>`
-	} else if fieldType == "file_list" {
+	} else if fieldType == FieldTypeStrFileList {
 		return `<li>
 						<label for="help">Help Text</label>
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -80,7 +100,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="multi_files" value="1" class="checkbox" />
 						<div class="help">Allow user select more than 1 files</div>
 					</li>`
-	} else if fieldType == "file_upload" {
+	} else if fieldType == FieldTypeStrFileUpload {
 		return `<li>
 						<label for="filetypes">Allowed Filetypes</label>
 						<input type="text" name="filetypes" id="filetypes" value="" style="width: 275px" class="text" />
@@ -101,7 +121,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, a file must be uploaded here for the form to be processed.</div>
 					</li>`
-	} else if fieldType == "gallery" {
+	} else if fieldType == FieldTypeStrGallery {
 		return `<li>
 						<label for="help">Help Text</label>
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -111,7 +131,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="multi_files" value="1" class="checkbox" />
 						<div class="help">Allow user select more than 1 files</div>
 					</li>`
-	} else if fieldType == "member_group_relationship" {
+	} else if fieldType == FieldTypeStrMemberGroupRelationship {
 		return `<li>
 						<label for="allow_multiple">Allow Multiple Relationships</label>
 						<input type="checkbox" name="allow_multiple" value="1" class="checkbox" />
@@ -131,7 +151,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, a selection must be made form to be processed.</div>
 					</li>`
-	} else if fieldType == "multicheckbox" {
+	} else if fieldType == FieldTypeStrMulticheckbox {
 		return `<li>
 						<label for="options">Options</label>
 						<textarea name="options" style="width: 500px; height: 150px" class="required textarea"></textarea>
@@ -149,7 +169,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, at least one checkbox must be checked a successful form submission.</div>
 					</li>`
-	} else if fieldType == "multiselect" {
+	} else if fieldType == FieldTypeStrMultiselect {
 		return `<li>
 						<label for="options">Options</label>
 						<textarea name="options" style="width: 500px; height: 150px" class="required textarea"></textarea>
@@ -167,7 +187,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, this field must not be empty for a successful form submission.</div>
 					</li>`
-	} else if fieldType == "radio" {
+	} else if fieldType == FieldTypeStrRadio {
 		return `<li>
 						<label for="options">Options</label>
 						<textarea name="options" style="width: 500px; height: 150px" class="required textarea"></textarea>
@@ -185,7 +205,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, this field must not be empty for a successful form submission.</div>
 					</li>`
-	} else if fieldType == "select" {
+	} else if fieldType == FieldTypeStrSelect {
 		return `<li>
 						<label for="options">Options</label>
 						<textarea name="options" style="width: 500px; height: 150px" class="required textarea"></textarea>
@@ -203,13 +223,13 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, this field must not be empty for a successful form submission.</div>
 					</li>`
-	} else if fieldType == "table" {
+	} else if fieldType == FieldTypeStrTable {
 		return `<li>
 						<label for="help">Help Text</label>
 						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
 						<div class="help">This help text will be displayed beneath the field.  Use it to guide the user in responding correctly.</div>
 					</li>`
-	} else if fieldType == "text" {
+	} else if fieldType == FieldTypeStrText {
 		return `<li>
 						<label for="default">Default Value</label>
 						<input type="text" name="default" id="default" value="" style="width: 275px" class="text" />
@@ -231,7 +251,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<div style="float: left"><div class="check_option"><input type="checkbox" name="validators[]" value="trim"  /> Trim whitespace from around response</div><div class="check_option"><input type="checkbox" name="validators[]" value="strip_tags"  /> Strip HTML tags</div><div class="check_option"><input type="checkbox" name="validators[]" value="alpha_numeric"  /> Only alphanumeric characters</div><div class="check_option"><input type="checkbox" name="validators[]" value="numeric"  /> Only numbers</div><div class="check_option"><input type="checkbox" name="validators[]" value="valid_domain"  /> Must be a valid domain (e.g., "yahoo.com")</div><div class="check_option"><input type="checkbox" name="validators[]" value="valid_email"  /> Must be a valid email address (e.g., "test@example.com")</div>				</div>
 
 					</li>`
-	} else if fieldType == "textarea" {
+	} else if fieldType == FieldTypeStrTextarea {
 		return `<li>
 						<label for="default">Default Value</label>
 						<textarea name="default" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -257,7 +277,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<div style="float: left"><div class="check_option"><input type="checkbox" name="validators[]" value="trim"  /> Trim whitespace from around response</div><div class="check_option"><input type="checkbox" name="validators[]" value="strip_tags"  /> Strip HTML tags</div><div class="check_option"><input type="checkbox" name="validators[]" value="alpha_numeric"  /> Only alphanumeric characters</div>				</div>
 
 					</li>`
-	} else if fieldType == "topic_relationship" {
+	} else if fieldType == FieldTypeStrTopicRelationship {
 		return `<li>
 						<label for="allow_multiple">Allow Multiple Relationships</label>
 						<input type="checkbox" name="allow_multiple" value="1" class="checkbox" />
@@ -281,7 +301,7 @@ func GetFieldTypeHTML(fieldType string) string {
 						<input type="checkbox" name="required" value="1" class="checkbox" />
 						<div class="help">If checked, a selection must be made form to be processed.</div>
 					</li>`
-	} else if fieldType == "wysiwyg" {
+	} else if fieldType == FieldTypeStrWysiwyg {
 		return `<li>
 						<label for="default">Default Value</label>
 						<textarea name="default" style="width: 500px; height: 80px" class="textarea"></textarea>
@@ -309,74 +329,4 @@ func GetFieldTypeHTML(fieldType string) string {
 	}
 
 	return ``
-}
-
-type Option struct {
-	Value string
-	Name string
-}
-type FieldTypeCheckBox struct {
-	FieldType
-}
-
-func (f *FieldTypeCheckBox)Options() []*Option {
-	return []*Option{&Option{Value:"0", Name:"Unchecked"}, &Option{Value:"1", Name:"Checked"}}
-}
-
-func (f *FieldTypeCheckBox)DefaultValue() *Option {
-	return f.Options()[0]
-}
-
-func (f *FieldTypeCheckBox)ToHTML() string {
-
-	t := template.Must(template.New("test").Parse(`<li>
-	<label for="default">Default State</label>
-	<select name="default">
-	{{range .Options}}
-	<option value="{{.Value}}" {{if eq .Value $.Option.Value}}selected="selected"{{end}}>{{.Name}}</option>
-	{{end}}
-	</select>
-	</li>`))
-	mp := make(map[string]interface{}, 0)
-	mp["Options"] = f.Options()
-	mp["Option"] = f.DefaultValue()
-
-	buf := bytes.NewBufferString("")
-	t.Execute(buf, mp)
-
-	return buf.String()+f.HelpHTML()+f.RequiredHTML()
-}
-
-type FieldTypeDate struct {
-	FieldType
-	FutureOnly bool
-}
-
-func (f *FieldTypeDate)FutureOnlyHTML() string {
-	return fmt.Sprintf(`<li>
-						<label for="future_only">Future Only</label>
-						<input type="checkbox" name="future_only" value="%d" class="checkbox" />
-						<div class="help">Only allow future dates?</div>
-					</li>`, f.FutureOnly)
-}
-
-func (f *FieldTypeDate)ToHTML() string {
-	return f.HelpHTML()+f.FutureOnlyHTML()
-}
-
-type FieldTypeDateTime struct {
-	FieldType
-	FutureOnly bool
-}
-
-func (f *FieldTypeDateTime)FutureOnlyHTML() string {
-	return fmt.Sprintf(`<li>
-						<label for="future_only">Future Only</label>
-						<input type="checkbox" name="future_only" value="%d" class="checkbox" />
-						<div class="help">Only allow future dates?</div>
-					</li>`, f.FutureOnly)
-}
-
-func (f *FieldTypeDateTime)ToHTML() string {
-	return f.HelpHTML()+f.FutureOnlyHTML()
 }

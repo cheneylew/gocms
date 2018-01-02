@@ -169,14 +169,6 @@
 						<fieldset>
 							<legend>自定义字段</legend>
 							<ul class="form">
-								<li id="row_49">
-									<label for="body">Body</label>
-									<div style="float: left; width:  750px ">
-										<textarea type="textarea " name="body " style="width: 700px; height: 140px " id="body" class="basic wysiwyg">
-										</textarea>
-
-									</div>
-								</li>
 								{{range .Fields}}
 								{{str2html .ToInputHTML}}
 								{{end}}

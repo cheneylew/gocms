@@ -10,7 +10,7 @@ $(document).ready(function () {
 		var this_type = $(this).val();
 		var field_id = $('#field_id').val();
 		
-		$.post(base_url + 'custom_fields/ajax_field_form', { type : this_type, id : field_id } , function (response) {
+		$.post(base_url + 'customfields/ajax_field_form', { type : this_type, id : field_id } , function (response) {
 			$('fieldset#field_options').html('<ul class="form">' + response + '</ul>');
 		});
 	});

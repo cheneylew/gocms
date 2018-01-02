@@ -9,6 +9,7 @@ import (
 	"strings"
 	"github.com/cheneylew/gocms/helper"
 	"fmt"
+	"github.com/cheneylew/goutil/utils/beego"
 )
 
 type AdminCPController struct {
@@ -298,39 +299,86 @@ func (c *AdminCPController) Fields() {
 			DefaultValue:fieldTypeDefaultValue,
 		}
 
-		database.DB.DBBaseAddColumnTinyInt(tableInfo.SystemName, systemName)
+		rules := make(map[string]interface{}, 0)
+		if fieldType == models.FieldTypeStrCheckbox {
+			database.DB.DBBaseAddColumnTinyInt(tableInfo.SystemName, systemName)
+		} else if fieldType == models.FieldTypeStrWysiwyg {
+			database.DB.DBBaseAddColumnVarChar(tableInfo.SystemName, systemName, 20000)
+		} else if fieldType == models.FieldTypeStrDate {
+
+			rules["future_only"] = c.GetString("future_only")
+			err := database.DB.DBBaseAddColumn(tableInfo.SystemName, systemName, beego.DataTypeDate, "0000-00-00")
+			if err != nil {
+				panic(err)
+			}
+		} else if fieldType == models.FieldTypeStrDatetime {
+
+			rules["future_only"] = c.GetString("future_only")
+			err := database.DB.DBBaseAddColumn(tableInfo.SystemName, systemName, beego.DataTypeDateTime, "0000-00-00 00:00:00")
+			if err != nil {
+				panic(err)
+			}
+		} else if fieldType == models.FieldTypeStrTextarea {
+
+			rules["width"] = c.GetString("width","")
+			rules["height"] = c.GetString("height","")
+			rules["validators"] = c.GetStrings("validators[]")
+
+			err := database.DB.DBBaseAddColumnVarChar(tableInfo.SystemName, systemName, 5000)
+			if err != nil {
+				panic(err)
+			}
+		} else if fieldType == models.FieldTypeStrText {
+
+			rules["width"] = c.GetString("width","")
+			rules["validators"] = c.GetStrings("validators[]")
+
+			err := database.DB.DBBaseAddColumnVarChar(tableInfo.SystemName, systemName, 5000)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			panic("have not setting...")
+			return
+		}
+
+		model.RuleJson = utils.JKJSON(rules)
 		_, err := database.DB.Orm.Insert(model)
 		if err != nil {
 			utils.JJKPrintln(err)
 		} else {
 			utils.JJKPrintln("field add ok!")
 		}
-}
+	}
 }
 
-func (c *AdminCPController) Custom_fields() {
+func (c *AdminCPController) CustomFields() {
 	fun := c.Path(2)
 	if fun == "ajax_field_form" {
 		ftype := c.GetString("type","")
-		html := models.GetFieldTypeHTML(ftype)
-		if ftype == "checkbox" {
-			html := &models.FieldTypeCheckBox{
-				FieldType:models.FieldType{},
-			}
-			c.Ctx.WriteString(html.ToHTML())
-		} else if ftype == "date" {
-			html := &models.FieldTypeDate{
-				FieldType:models.FieldType{},
-			}
-			c.Ctx.WriteString(html.ToHTML())
-		}  else if ftype == "datetime" {
-			html := &models.FieldTypeDateTime{
-				FieldType:models.FieldType{},
-			}
-			c.Ctx.WriteString(html.ToHTML())
-		} else {
-			c.Ctx.WriteString(html)
+		fieldType := models.FieldType{
+			Type:ftype,
 		}
+		html := fieldType.RuleHTML()
+		c.Ctx.WriteString(html)
+		//if ftype == "checkbox" {
+		//	html := &models.FieldTypeCheckBox{
+		//		FieldType:models.FieldType{},
+		//	}
+		//	c.Ctx.WriteString(html.ToHTML())
+		//} else if ftype == "date" {
+		//	html := &models.FieldTypeDate{
+		//		FieldType:models.FieldType{},
+		//	}
+		//	c.Ctx.WriteString(html.ToHTML())
+		//}  else if ftype == "datetime" {
+		//	html := &models.FieldTypeDateTime{
+		//		FieldType:models.FieldType{},
+		//	}
+		//	c.Ctx.WriteString(html.ToHTML())
+		//} else {
+		//
+		//}
 	}
 }
 
@@ -353,6 +401,9 @@ func (c *AdminCPController) Dataset() {
 				//删除文章
 				item := database.DB.GetContentWithContentID(value)
 				database.DB.Orm.Delete(item)
+
+				//删除自定义表行
+				database.DB.DBBaseDeleteRow(item.ContentType.SystemName, value)
 			} else if action == "delete_fieldTypes" {
 				//删除自定义字段
 				fieldType := database.DB.GetFieldTypesWithFieldTypeID(value)
@@ -449,9 +500,21 @@ func (c *AdminCPController) Publish() {
 			params["Content"] = content
 
 			sql := utils.Template("INSERT INTO `{{.ContentType.SystemName}}` (`content_id`{{range .FieldTypes}},`{{.SystemName}}`{{end}}) VALUES ({{.Content.ContentId}}{{range .FieldTypes}},?{{end}});", params)
-			var values []string
+			var values []interface{}
 			for _, value := range fieldTypes {
-				values = append(values, c.GetString(value.SystemName,""))
+				if value.Type == models.FieldTypeStrCheckbox {
+					if c.GetString(value.SystemName,"") == "on" {
+						values = append(values, 1)
+					} else {
+						values = append(values, 0)
+					}
+				} else if value.Type == models.FieldTypeStrDatetime {
+					datetimeStr := c.GetDateTimeStr(value.SystemName)
+					values = append(values, datetimeStr)
+
+				} else {
+					values = append(values, c.GetString(value.SystemName,""))
+				}
 			}
 			_, err := database.DB.DBBaseExecSQL(sql,values)
 			if err != nil {
@@ -472,15 +535,18 @@ func (c *AdminCPController) Publish() {
 		languages := database.DB.GetLanguages()
 		c.Data["Languages"] = languages
 
-		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
-		c.Data["Fields"] = fieldTypes
-
 		contentId := c.PathInt64(4)
 		content := database.DB.GetContentWithContentID(contentId)
 		c.Data["Content"] = content
 
+		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
+
 		params, _ := database.DB.DBBaseAnyTableSelectOneRowWithContentID(contentType.SystemName, contentId)
-		utils.JJKPrintln(params)
+		for i := 0; i < len(fieldTypes); i++ {
+			fieldTypes[i].DefaultValue = utils.ToString(params[fieldTypes[i].SystemName])
+		}
+
+		c.Data["Fields"] = fieldTypes
 
 		if c.IsPost() {
 			title := c.GetString("title","")
@@ -494,29 +560,52 @@ func (c *AdminCPController) Publish() {
 			language := database.DB.GetLanguageWithLanguageID(utils.JKStrToInt64(languageId))
 
 			//发布时间
-			date := c.GetString("publish_date","")
-			dateHour := c.GetString("publish_date_hour","")
-			dateMinute := c.GetString("publish_date_minute","")
-			dateAmpm := c.GetString("publish_date_ampm","")
-
-			datetimeStr := utils.ValuesToDateTime(date, dateHour, dateMinute, dateAmpm)
+			datetimeStr := c.GetDateTime("publish_date")
 			utils.JJKPrintln(datetimeStr)
-			utils.JJKPrintln(date, dateHour, dateMinute, dateAmpm, languageId, privileges, title)
+			utils.JJKPrintln(languageId, privileges, title)
 
-			content := &models.Content{
-				Language:language,
-				ContentType:contentType,
-				User:c.GetUser().(*models.User),
-				ContentDate:time.Now(),
-				ContentModified:time.Now(),
-				ContentIsStandard:contentType.IsStandard,
-				ContentTitle:title,
-				ContentPrivileges:privilegesJson,
+			content.Language = language
+			content.ContentType = contentType
+			content.User = c.GetUser().(*models.User)
+			content.ContentDate = time.Now()
+			content.ContentModified = time.Now()
+			content.ContentIsStandard = contentType.IsStandard
+			content.ContentTitle = title
+			content.ContentPrivileges = privilegesJson;
+
+			database.DB.Orm.Update(content)
+
+			//自定义表
+			params := utils.TemplateParams()
+			params["FieldTypes"] = fieldTypes
+			params["ContentType"] = contentType
+			params["Content"] = content
+
+			sql := utils.Template("UPDATE `{{.ContentType.SystemName}}` SET `content_id` = {{.Content.ContentId}}{{range .FieldTypes}},`{{.SystemName}}` =? {{end}} WHERE `content_id` = {{.Content.ContentId}};", params)
+			var values []interface{}
+			for _, value := range fieldTypes {
+				if value.Type == models.FieldTypeStrCheckbox {
+					if c.GetString(value.SystemName,"") == "on" {
+						values = append(values, 1)
+					} else {
+						values = append(values, 0)
+					}
+				} else if value.Type == models.FieldTypeStrDatetime {
+					datetimeStr := c.GetDateTimeStr(value.SystemName)
+					values = append(values, datetimeStr)
+				}  else {
+					values = append(values, c.GetString(value.SystemName,""))
+				}
+
+			}
+			utils.JJKPrintln(values)
+			utils.JJKPrintln(sql)
+			_, err := database.DB.DBBaseExecSQL(sql,values)
+			if err != nil {
+				utils.JJKPrintln(err)
 			}
 
-			contentId, _ := database.DB.Orm.Insert(content)
-			content.ContentId = contentId
-
+			c.RedirectWithURL(c.Ctx.Request.RequestURI)
 		}
 	}
 }

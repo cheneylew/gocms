@@ -197,7 +197,7 @@ func (db *DataBase)GetContentsWithContentTypeID(contentTypeId int64) []*models.C
 	var models []*models.Content
 	qs := db.Orm.QueryTable("Content")
 
-	_, err := qs.Filter("ContentType__ContentTypeId", contentTypeId).RelatedSel().All(&models)
+	_, err := qs.Filter("ContentType__ContentTypeId", contentTypeId).OrderBy("-ContentId").RelatedSel().All(&models)
 	if err != nil || len(models) == 0{
 		return nil
 	}
