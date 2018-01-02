@@ -10,6 +10,8 @@ import (
 	"github.com/cheneylew/gocms/helper"
 	"fmt"
 	"github.com/cheneylew/goutil/utils/beego"
+	"path"
+	"os"
 )
 
 type AdminCPController struct {
@@ -337,6 +339,23 @@ func (c *AdminCPController) Fields() {
 			if err != nil {
 				panic(err)
 			}
+		}  else if fieldType == models.FieldTypeStrMulticheckbox|| fieldType == models.FieldTypeStrMultiselect || fieldType == models.FieldTypeStrSelect || fieldType == models.FieldTypeStrRadio{
+
+			model.Options = utils.JKJSON(helper.StringToOptions(c.GetString("options","")))
+			model.DefaultValue = strings.Join(helper.StringToOptionValue(model.DefaultValue), "|")
+
+			err := database.DB.DBBaseAddColumnVarChar255(tableInfo.SystemName, systemName)
+			if err != nil {
+				panic(err)
+			}
+		} else  if fieldType == models.FieldTypeStrFileUpload {
+			rules["width"] = c.GetString("width","")
+			rules["filetypes"] = c.GetStrings("filetypes")
+
+			err := database.DB.DBBaseAddColumnVarChar255(tableInfo.SystemName, systemName)
+			if err != nil {
+				panic(err)
+			}
 		} else {
 			panic("have not setting...")
 			return
@@ -512,6 +531,41 @@ func (c *AdminCPController) Publish() {
 					datetimeStr := c.GetDateTimeStr(value.SystemName)
 					values = append(values, datetimeStr)
 
+				} else if value.Type == models.FieldTypeStrMulticheckbox || value.Type == models.FieldTypeStrMultiselect {
+					values = append(values, strings.Join(c.GetStrings(value.SystemName+"[]"), "|"))
+				} else if value.Type == models.FieldTypeStrFileUpload {
+					lastFile := c.GetString(value.SystemName+"_uploaded")
+					deleteFileFileUpload, _ := c.GetBool("delete_file_file_upload", false)
+
+					f, h, err := c.GetFile(value.SystemName)
+					if f != nil && err == nil {
+						defer f.Close()
+						newFileName := utils.MD5(utils.RandomString(32)+time.Now().String())+utils.Ext(h.Filename)
+						newPath := "static/upload/" + newFileName
+						c.SaveToFile(value.SystemName, newPath)
+
+						//生成预览文件
+						realPath := utils.SelfDir()+"/"+newPath
+						utils.ImageThumbnail(realPath, 150)
+
+						values = append(values, newPath)
+					} else {
+						if deleteFileFileUpload {
+							values = append(values, "")
+						} else {
+							values = append(values, strings.TrimLeft(lastFile,"/"))
+						}
+					}
+
+					//删除上次上传的照片
+					lastFileThumbnail := utils.ThumbnailPath(lastFile)
+					if (len(lastFile) > 0 && f != nil) || deleteFileFileUpload {
+						//本次传了文件，移除上次文件
+						lastFile = path.Join(utils.SelfDir(), lastFile)
+						lastFileThumbnail = path.Join(utils.SelfDir(), lastFileThumbnail)
+						os.Remove(lastFile)
+						os.Remove(lastFileThumbnail)
+					}
 				} else {
 					values = append(values, c.GetString(value.SystemName,""))
 				}
@@ -593,7 +647,42 @@ func (c *AdminCPController) Publish() {
 				} else if value.Type == models.FieldTypeStrDatetime {
 					datetimeStr := c.GetDateTimeStr(value.SystemName)
 					values = append(values, datetimeStr)
-				}  else {
+				} else if value.Type == models.FieldTypeStrMulticheckbox || value.Type == models.FieldTypeStrMultiselect {
+					values = append(values, strings.Join(c.GetStrings(value.SystemName+"[]"), "|"))
+				} else if value.Type == models.FieldTypeStrFileUpload {
+					lastFile := c.GetString(value.SystemName+"_uploaded")
+					deleteFileFileUpload, _ := c.GetBool("delete_file_file_upload", false)
+
+					f, h, err := c.GetFile(value.SystemName)
+					if f != nil && err == nil {
+						defer f.Close()
+						newFileName := utils.MD5(utils.RandomString(32)+time.Now().String())+utils.Ext(h.Filename)
+						newPath := "static/upload/" + newFileName
+						c.SaveToFile(value.SystemName, newPath)
+
+						//生成预览文件
+						realPath := utils.SelfDir()+"/"+newPath
+						utils.ImageThumbnail(realPath, 150)
+
+						values = append(values, newPath)
+					} else {
+						if deleteFileFileUpload {
+							values = append(values, "")
+						} else {
+							values = append(values, strings.TrimLeft(lastFile,"/"))
+						}
+					}
+
+					//删除上次上传的照片
+					lastFileThumbnail := utils.ThumbnailPath(lastFile)
+					if (len(lastFile) > 0 && f != nil) || deleteFileFileUpload {
+						//本次传了文件，移除上次文件
+						lastFile = path.Join(utils.SelfDir(), lastFile)
+						lastFileThumbnail = path.Join(utils.SelfDir(), lastFileThumbnail)
+						os.Remove(lastFile)
+						os.Remove(lastFileThumbnail)
+					}
+				} else {
 					values = append(values, c.GetString(value.SystemName,""))
 				}
 

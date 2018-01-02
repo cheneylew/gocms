@@ -104,7 +104,7 @@ func (f *FieldType)RuleHTML() string {
 		return `<li>
 						<label for="filetypes">Allowed Filetypes</label>
 						<input type="text" name="filetypes" id="filetypes" value="" style="width: 275px" class="text" />
-						<div class="help">Enter the filetypes (e.g., "jpg", "gif", "pdf", and "doc") that can be uploaded here.  Though not a foolproof mechanism
+						<div class="help">Enter the filetypes (jpg|pdf|png|gif) that can be uploaded here.  Though not a foolproof mechanism
 	          	      for validating filetypes, validating the file extension will help make sure people upload proper files here.  If someone
 	          	      does upload a malicious file by renaming the file, the file will still be non-executable as all filenames are encrypted and
 	          	      securely stored.</div>

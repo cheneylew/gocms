@@ -5,7 +5,21 @@ import (
 	"fmt"
 	"github.com/cheneylew/goutil/utils"
 	"encoding/json"
+	"strings"
 )
+
+func StringToOptionValue(defaultValue string) []string {
+	tmpValues := strings.Split(defaultValue, "\n")
+	var values []string
+	for _, value := range tmpValues {
+		value = utils.Trim(value)
+		if len(value) > 0 {
+			values = append(values, value)
+		}
+	}
+
+	return values
+}
 
 type FieldType struct {
 	FieldTypeId int64 `orm:"pk;auto"`
@@ -18,6 +32,12 @@ type FieldType struct {
 	DefaultValue string
 	Options string			//一些选项
 	RuleJson string			//规则限制
+}
+
+type Option struct {
+	Key string
+	Value string
+	IsSelected bool
 }
 
 type FieldTypeTextViewRule struct {
@@ -119,7 +139,7 @@ func (f *FieldType)ToInputHTML() string {
 		if err == nil {
 			params["Rule"] = rule
 		}
-		tplStr = `<textarea name="{{.FieldType.SystemName}}" style="width: {{.Rule.Width}}; height: {{.Rule.Height}}" class="required textarea {{if .Rule}}{{range .Rule.Validators}}{{.}} {{end}}{{end}}">{{.FieldType.DefaultValue}}</textarea>
+		tplStr = `<textarea name="{{.FieldType.SystemName}}" style="width: {{.Rule.Width}}; height: {{.Rule.Height}}" class="{{if .FieldType.Required}}required {{end}} textarea {{if .Rule}}{{range .Rule.Validators}}{{.}} {{end}}{{end}}">{{.FieldType.DefaultValue}}</textarea>
 				 `
 	} else if f.Type == FieldTypeStrText {
 		var rule FieldTypeTextViewRule
@@ -127,7 +147,61 @@ func (f *FieldType)ToInputHTML() string {
 		if err == nil {
 			params["Rule"] = rule
 		}
-		tplStr = `<input type="text" name="{{.FieldType.SystemName}}" id="{{.FieldType.SystemName}}" value="{{.FieldType.DefaultValue}}" style="width: {{.Rule.Width}}" class="required text {{if .Rule}}{{range .Rule.Validators}}{{.}} {{end}}{{end}}">`
+		tplStr = `<input type="text" name="{{.FieldType.SystemName}}" id="{{.FieldType.SystemName}}" value="{{.FieldType.DefaultValue}}" style="width: {{.Rule.Width}}" class="{{if .FieldType.Required}}required {{end}} text {{if .Rule}}{{range .Rule.Validators}}{{.}} {{end}}{{end}}">`
+	} else if f.Type == FieldTypeStrMulticheckbox || f.Type == FieldTypeStrMultiselect || f.Type == FieldTypeStrSelect || f.Type == FieldTypeStrRadio{
+		var options []Option
+		err := json.Unmarshal([]byte(f.Options), &options)
+		values := strings.Split(f.DefaultValue, "|")
+		if err == nil {
+			for i:=0; i< len(options); i++ {
+				options[i].IsSelected = utils.InSlice(options[i].Value, values)
+			}
+			params["Options"] = options
+			utils.JJKPrintln(options, values, f.DefaultValue)
+		}
+		if f.Type == FieldTypeStrMulticheckbox {
+			tplStr = `<div style="float: left">
+			{{range .Options}}
+			<div class="check_option">
+				<input type="checkbox" name="{{$.FieldType.SystemName}}[]" {{if .IsSelected}}checked="checked"{{end}} value="{{.Value}}">{{.Key}}
+			</div>
+			{{end}}
+			</div>`
+		} else if f.Type == FieldTypeStrMultiselect || f.Type == FieldTypeStrSelect {
+			params["IsMulti"] = f.Type == FieldTypeStrMultiselect
+			tplStr = `<div style="float: left">
+			<select name="{{$.FieldType.SystemName}}{{if .IsMulti}}[]{{end}}" {{if .IsMulti}}multiple="multiple"{{end}}>
+			{{range .Options}}
+				<option {{if .IsSelected}}selected="selected"{{end}} value="{{.Value}}">{{.Key}}</option>
+			{{end}}
+			</select>
+			</div>`
+		} else if f.Type == FieldTypeStrRadio {
+			tplStr = `
+			{{range .Options}}
+			<input type="radio" name="{{$.FieldType.SystemName}}" {{if .IsSelected}}checked="checked"{{end}} class="{{if .FieldType.Required}}required {{end}} radio" value="{{.Value}}"/> {{.Key}}&nbsp;&nbsp;&nbsp;
+			{{end}}
+			`
+		}
+	} else if f.Type == FieldTypeStrFileUpload {
+		var rule FieldTypeTextViewRule
+		err := json.Unmarshal([]byte(f.RuleJson), &rule)
+		if err == nil {
+			params["Rule"] = rule
+			params["ThumbnailPath"] = utils.ThumbnailPath(f.DefaultValue)
+		}
+		tplStr = `<input type="hidden" name="{{$.FieldType.SystemName}}_uploaded" value="/{{.FieldType.DefaultValue}}">
+						<input type="hidden" name="{{$.FieldType.SystemName}}_ftp" value="">
+						<input id="{{$.FieldType.SystemName}}" type="file" name="{{$.FieldType.SystemName}}" style="width: {{.Rule.Width}}" class="{{if .FieldType.Required}}required {{end}}file text">
+						{{if .FieldType.DefaultValue}}
+						<br>
+<a href="/{{.FieldType.DefaultValue}}" target="_blank">
+<img style="margin-left: 150px" src="/{{.ThumbnailPath}}" alt="preview">
+</a><br>
+<input style="margin-left: 150px" type="checkbox" name="delete_file_file_upload" value="1"> <span style="font-style: italic; color: #ff6464">Delete current file_upload</span>
+						{{end}}
+						<div class="help">Maximum filesize for web upload: 32M.  file upload</div>
+						`
 	}
 
 	strs := utils.Template(header+tplStr+footer, params)

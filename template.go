@@ -1,20 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"github.com/cheneylew/gocms/helper"
 	"github.com/cheneylew/goutil/utils"
 )
 
 func TemplateMain()  {
+	value := `男=1
+ 女=2
+ 中性=3
+ 无性别=4`
+	options := helper.StringToOptions(value)
+	utils.JJKPrintln(utils.JKJSON(options))
 
-	var hours []string
-	var minutes []string
-	for i := 0; i<= 12; i++ {
-		hours = append(hours, fmt.Sprintf("%02d", i))
-	}
-	for i := 0; i<= 59; i++ {
-		minutes = append(minutes, fmt.Sprint("%02d", i))
-	}
+	utils.JJKPrintln(helper.OptionsToString(options))
 
-	utils.JJKPrintln(hours)
 }
