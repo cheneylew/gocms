@@ -12,6 +12,8 @@ import (
 	"github.com/cheneylew/goutil/utils/beego"
 	"path"
 	"os"
+	"encoding/json"
+	"github.com/astaxie/beego/orm"
 )
 
 type AdminCPController struct {
@@ -348,9 +350,25 @@ func (c *AdminCPController) Fields() {
 			if err != nil {
 				panic(err)
 			}
+		} else  if fieldType == models.FieldTypeStrMemberGroupRelationship {
+			rules["allowMultiple"] = c.GetString("allow_multiple","")
+
+			err := database.DB.DBBaseAddColumnVarChar255(tableInfo.SystemName, systemName)
+			if err != nil {
+				panic(err)
+			}
 		} else  if fieldType == models.FieldTypeStrFileUpload {
 			rules["width"] = c.GetString("width","")
 			rules["filetypes"] = c.GetStrings("filetypes")
+
+			err := database.DB.DBBaseAddColumnVarChar255(tableInfo.SystemName, systemName)
+			if err != nil {
+				panic(err)
+			}
+		} else if fieldType == models.FieldTypeStrRelationship {
+			rules["fieldName"] = c.GetString("field_name","")
+			rules["contentType"] = c.GetString("content_type","")
+			rules["allowMultiple"] = c.GetString("allow_multiple","")
 
 			err := database.DB.DBBaseAddColumnVarChar255(tableInfo.SystemName, systemName)
 			if err != nil {
@@ -379,25 +397,13 @@ func (c *AdminCPController) CustomFields() {
 			Type:ftype,
 		}
 		html := fieldType.RuleHTML()
-		c.Ctx.WriteString(html)
-		//if ftype == "checkbox" {
-		//	html := &models.FieldTypeCheckBox{
-		//		FieldType:models.FieldType{},
-		//	}
-		//	c.Ctx.WriteString(html.ToHTML())
-		//} else if ftype == "date" {
-		//	html := &models.FieldTypeDate{
-		//		FieldType:models.FieldType{},
-		//	}
-		//	c.Ctx.WriteString(html.ToHTML())
-		//}  else if ftype == "datetime" {
-		//	html := &models.FieldTypeDateTime{
-		//		FieldType:models.FieldType{},
-		//	}
-		//	c.Ctx.WriteString(html.ToHTML())
-		//} else {
-		//
-		//}
+		params := utils.TemplateParams()
+		if ftype == models.FieldTypeStrMemberGroupRelationship {
+			params["Roles"] = database.DB.GetUserRoles()
+		} else if ftype == models.FieldTypeStrRelationship {
+			params["ContentTypes"] = database.DB.GetContentTypes()
+		}
+		c.Ctx.WriteString(utils.Template(html,params))
 	}
 }
 
@@ -475,6 +481,26 @@ func (c *AdminCPController) Publish() {
 		c.Data["Languages"] = languages
 
 		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
+		for i := 0; i < len(fieldTypes); i++ {
+			if fieldTypes[i].Type == models.FieldTypeStrMemberGroupRelationship {
+				fieldTypes[i].Options = utils.JKJSON(database.DB.GetUserRoles())
+			} else if fieldTypes[i].Type == models.FieldTypeStrRelationship {
+				var rule models.FieldTypeTextViewRule
+				json.Unmarshal([]byte(fieldTypes[i].RuleJson), &rule)
+				contentType := database.DB.GetContentTypeWithId(utils.JKStrToInt64(rule.ContentType))
+				contentTypeName := contentType.SystemName
+				fieldName := rule.FieldName
+
+				var list []orm.Params
+				sql := fmt.Sprintf("select %s_id, %s from %s", contentTypeName, fieldName, contentTypeName)
+				utils.JJKPrintln(sql)
+				database.DB.Orm.Raw(sql).Values(&list)
+
+				fieldTypes[i].Options = utils.JKJSON(list)
+				fieldTypes[i].Other = contentTypeName+"_id"+","+fieldName
+			}
+		}
+
 		c.Data["Fields"] = fieldTypes
 		if c.IsPost() {
 			title := c.GetString("title","")
@@ -566,6 +592,14 @@ func (c *AdminCPController) Publish() {
 						os.Remove(lastFile)
 						os.Remove(lastFileThumbnail)
 					}
+				} else if value.Type == models.FieldTypeStrMemberGroupRelationship || value.Type == models.FieldTypeStrRelationship {
+					var rule models.FieldTypeTextViewRule
+					json.Unmarshal([]byte(value.RuleJson), &rule)
+					if rule.AllowMultiple == "1" {
+						values = append(values, strings.Join(c.GetStrings(value.SystemName+"[]"),"|"))
+					} else {
+						values = append(values, c.GetString(value.SystemName,""))
+					}
 				} else {
 					values = append(values, c.GetString(value.SystemName,""))
 				}
@@ -598,6 +632,23 @@ func (c *AdminCPController) Publish() {
 		params, _ := database.DB.DBBaseAnyTableSelectOneRowWithContentID(contentType.SystemName, contentId)
 		for i := 0; i < len(fieldTypes); i++ {
 			fieldTypes[i].DefaultValue = utils.ToString(params[fieldTypes[i].SystemName])
+			if fieldTypes[i].Type == models.FieldTypeStrMemberGroupRelationship {
+				fieldTypes[i].Options = utils.JKJSON(database.DB.GetUserRoles())
+			} else if fieldTypes[i].Type == models.FieldTypeStrRelationship {
+				var rule models.FieldTypeTextViewRule
+				json.Unmarshal([]byte(fieldTypes[i].RuleJson), &rule)
+				contentType := database.DB.GetContentTypeWithId(utils.JKStrToInt64(rule.ContentType))
+				contentTypeName := contentType.SystemName
+				fieldName := rule.FieldName
+
+				var list []orm.Params
+				sql := fmt.Sprintf("select %s_id, %s from %s", contentTypeName, fieldName, contentTypeName)
+				utils.JJKPrintln(sql)
+				database.DB.Orm.Raw(sql).Values(&list)
+
+				fieldTypes[i].Options = utils.JKJSON(list)
+				fieldTypes[i].Other = contentTypeName+"_id"+","+fieldName
+			}
 		}
 
 		c.Data["Fields"] = fieldTypes
@@ -681,6 +732,14 @@ func (c *AdminCPController) Publish() {
 						lastFileThumbnail = path.Join(utils.SelfDir(), lastFileThumbnail)
 						os.Remove(lastFile)
 						os.Remove(lastFileThumbnail)
+					}
+				} else if value.Type == models.FieldTypeStrMemberGroupRelationship || value.Type == models.FieldTypeStrRelationship{
+					var rule models.FieldTypeTextViewRule
+					json.Unmarshal([]byte(value.RuleJson), &rule)
+					if rule.AllowMultiple == "1" {
+						values = append(values, strings.Join(c.GetStrings(value.SystemName+"[]"),"|"))
+					} else {
+						values = append(values, c.GetString(value.SystemName,""))
 					}
 				} else {
 					values = append(values, c.GetString(value.SystemName,""))

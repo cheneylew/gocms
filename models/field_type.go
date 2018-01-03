@@ -139,8 +139,10 @@ func (f *FieldType)RuleHTML() string {
 					</li><li>
 						<label for="default">Default Value</label>
 						<select name="default">
-<option value="1">默认</option>
-</select>
+						{{range .Roles}}
+						<option value="{{.UserRoleId}}">{{.Name}}</option>
+						{{end}}
+						</select>
 
 					</li><li>
 						<label for="help">Help Text</label>
@@ -324,6 +326,40 @@ func (f *FieldType)RuleHTML() string {
 						<div style="float: left"><div class="check_option"><input type="checkbox" name="validators[]" value="trim"  /> Trim whitespace from around response</div>				</div>
 
 					</li>`
+	} else if fieldType == FieldTypeStrRelationship {
+		return `<fieldset id="field_options">
+		<ul class="form">
+					<li>
+						<label for="content_type">Content Type</label>
+						<select name="content_type">
+							{{range .ContentTypes}}
+								<option value="{{.ContentTypeId}}">{{.ContentTypeId}}-{{.Name}}</option>
+							{{end}}
+						</select>
+					</li>
+					<li>
+						<label for="field_name">Field Name</label>
+						<input type="text" name="field_name" id="field_name" value="" style="width: 275px" class="required text">
+						<div class="help">Enter the "system_name" for the field that you want to use to identify the content items.  For example, for a content type
+	               		   like news articles, you might enter "headline" if you have a Headline field.  You can confirm the accuracy of this fieldname
+	               		   by going to Publish &gt; Content Types &gt; Manage Fields (for the content type you have selected above).</div>
+					</li><li>
+						<label for="allow_multiple">Allow Multiple Relationships</label>
+						<input type="checkbox" name="allow_multiple" value="1" class="checkbox" checked="checked">
+						<div class="help">If checked, the user can select one or many content items from the list.</div>
+					</li><li>
+						<label for="default">Default Value</label>
+						<input type="text" name="default" id="default" value="" style="width: 275px" class="text">
+						<div class="help">The default value should be entered as a numeric Content ID</div>
+					</li><li>
+						<label for="help">Help Text</label>
+						<textarea name="help" style="width: 500px; height: 80px" class="textarea"></textarea>
+						<div class="help">This help text will be displayed beneath the field.  Use it to guide the user in responding correctly.</div>
+					</li><li>
+						<label for="required">Required Field</label>
+						<input type="checkbox" name="required" value="1" class="checkbox">
+						<div class="help">If checked, a selection must be made form to be processed.</div>
+					</li></ul></fieldset>`
 	} else if fieldType == "" {
 		return ``
 	}

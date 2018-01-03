@@ -10,6 +10,8 @@ func main() {
 	MockMain()
 	TemplateMain()
 	beego.AddFuncMap("Equal",utils.Equal)
+	beego.AddFuncMap("InSlice",utils.InSlice)
+	beego.AddFuncMap("ToStr",utils.ToString)
 	beego.Run()
 }
 

@@ -32,6 +32,7 @@ type FieldType struct {
 	DefaultValue string
 	Options string			//一些选项
 	RuleJson string			//规则限制
+	Other string
 }
 
 type Option struct {
@@ -44,6 +45,9 @@ type FieldTypeTextViewRule struct {
 	Height     string   `json:"height"`
 	Validators []string `json:"validators"`
 	Width      string   `json:"width"`
+	ContentType string	`json:"contentType"`
+	FieldName string	`json:"fieldName"`
+	AllowMultiple string `json:"allowMultiple`
 }
 
 func (f *FieldType)RequiredHTML() string {
@@ -202,6 +206,51 @@ func (f *FieldType)ToInputHTML() string {
 						{{end}}
 						<div class="help">Maximum filesize for web upload: 32M.  file upload</div>
 						`
+	} else if f.Type == FieldTypeStrMemberGroupRelationship {
+		var roles []*UserRole
+		json.Unmarshal([]byte(f.Options), &roles)
+		params["Selecteds"] = strings.Split(f.DefaultValue, "|")
+
+		var rule FieldTypeTextViewRule
+		err := json.Unmarshal([]byte(f.RuleJson), &rule)
+		if err == nil {
+			params["Rule"] = rule
+		}
+
+		params["Groups"] = roles
+		tplStr = `<div style="float: left">
+			<select name="{{$.FieldType.SystemName}}{{if Equal .Rule.AllowMultiple "1"}}[]{{end}}" {{if Equal .Rule.AllowMultiple "1"}}multiple="multiple"{{end}}>
+			{{range .Groups}}
+				<option value="{{.UserRoleId}}" {{if InSlice (ToStr .UserRoleId) $.Selecteds}}selected="selected"{{end}}>{{.Name}}</option>
+			{{end}}
+			</select>
+			</div>`
+	} else if f.Type == FieldTypeStrRelationship {
+		keyValues := make([]map[string]interface{}, 0)
+		json.Unmarshal([]byte(f.Options), &keyValues)
+		params["Selecteds"] = strings.Split(f.DefaultValue, "|")
+
+		var rule FieldTypeTextViewRule
+		err := json.Unmarshal([]byte(f.RuleJson), &rule)
+		if err == nil {
+			params["Rule"] = rule
+			kvs := strings.Split(f.Other, ",")
+			if len(kvs) == 2 {
+				params["ID"] = kvs[0]
+				params["FieldName"] = kvs[1]
+			}
+			
+		}
+
+		params["Maps"] = keyValues
+		tplStr = `<div style="float: left">
+			<select name="{{$.FieldType.SystemName}}{{if Equal .Rule.AllowMultiple "1"}}[]{{end}}" {{if Equal .Rule.AllowMultiple "1"}}multiple="multiple"{{end}}>
+			<option value="">不选</option>
+			{{range .Maps}}
+				<option value="{{MapGet . $.ID}}" {{if InSlice (ToStr (MapGet . $.ID)) $.Selecteds}}selected="selected"{{end}}>{{MapGet . $.FieldName}}</option>
+			{{end}}
+			</select>
+			</div>`
 	}
 
 	strs := utils.Template(header+tplStr+footer, params)
