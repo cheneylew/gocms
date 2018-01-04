@@ -9,7 +9,7 @@
 					<a href="/admincp/fields/{{.ContentType.ContentTypeId}}">添加字段</a>
 				</li>
 				<li>
-					<a href="http://localhost/hero/admincp/custom_fields/order/25/aHR0cDovL2xvY2FsaG9zdC9oZXJvL2FkbWluY3AvcHVibGlzaC90eXBlX2ZpZWxkcy8xMg%3D%3D">Preview &amp; Arrange Fields</a>
+					<a href="http://localhost/hero/admincp/custom_fields/order/25/aHR0cDovL2xvY2FsaG9zdC9oZXJvL2FkbWluY3AvcHVibGlzaC90eXBlX2ZpZWxkcy8xMg%3D%3D">预览 &amp; 排序</a>
 				</li>
 			</ul>
 			<h1>{{.ContentType.Name}}: Manage Fields</h1>
@@ -35,6 +35,7 @@
 						</tr>
 					</thead>
 					<tbody>
+					{{if .ContentType.IsStandard}}
 						<tr>
 							<td></td>
 							<td>n/a</td>
@@ -54,19 +55,12 @@
 						<tr>
 							<td></td>
 							<td>n/a</td>
-							<td>Topic</td>
-							<td>topic</td>
-							<td>dropdown (standard page field)</td>
-							<td class="options"></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>n/a</td>
 							<td>Restricted to Member Group(s)</td>
 							<td>member_group_access</td>
 							<td>dropdown</td>
 							<td class="options"></td>
 						</tr>
+					{{end}}
 						{{range .Fields}}
 						<tr>
 							<td><input type="checkbox" name="check_{{.FieldTypeId}}" value="{{.FieldTypeId}}" class="action_items" /></td>

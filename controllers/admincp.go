@@ -243,6 +243,7 @@ func (c *AdminCPController) Types() {
 				c.SetError("创建失败", false)
 			} else {
 				c.SetError("创建成功", true)
+				c.RedirectWithURL("/admincp/types?active=2")
 			}
 		}
 	} else if fun == "manage" {
@@ -307,7 +308,10 @@ func (c *AdminCPController) Fields() {
 		if fieldType == models.FieldTypeStrCheckbox {
 			database.DB.DBBaseAddColumnTinyInt(tableInfo.SystemName, systemName)
 		} else if fieldType == models.FieldTypeStrWysiwyg {
-			database.DB.DBBaseAddColumnVarChar(tableInfo.SystemName, systemName, 20000)
+			err := database.DB.DBBaseAddColumnVarChar(tableInfo.SystemName, systemName, 2000)
+			if err != nil {
+				panic(err)
+			}
 		} else if fieldType == models.FieldTypeStrDate {
 
 			rules["future_only"] = c.GetString("future_only")
@@ -421,14 +425,19 @@ func (c *AdminCPController) Dataset() {
 		}
 		//returnUrl := c.GetString("return_url","")
 		action := c.GetString("action");
+		info := c.GetString("info")
 		for _, value := range itemIds {
-			if action == "delete_articles" {
-				//删除文章
+			if action == "delete_articles_not_standard" {
+				contentType := database.DB.GetContentTypeWithId(utils.JKStrToInt64(info))
+				//删除自定义表行
+				database.DB.DBBaseDeleteRowWithId(contentType.SystemName, value)
+			} else if action == "delete_articles" {
+				//删除Content
 				item := database.DB.GetContentWithContentID(value)
 				database.DB.Orm.Delete(item)
 
 				//删除自定义表行
-				database.DB.DBBaseDeleteRow(item.ContentType.SystemName, value)
+				database.DB.DBBaseDeleteRowWithContentId(item.ContentType.SystemName, value)
 			} else if action == "delete_fieldTypes" {
 				//删除自定义字段
 				fieldType := database.DB.GetFieldTypesWithFieldTypeID(value)
@@ -466,8 +475,23 @@ func (c *AdminCPController) Publish() {
 		c.TplName = "admin/publish_manage.html"
 		c.AddCSS("dataset.css")
 
-		contents := database.DB.GetContentsWithContentTypeID(contentTypeId)
-		c.Data["Contents"] = contents
+		if contentType.IsStandard {
+			contents := database.DB.GetContentsWithContentTypeID(contentTypeId)
+			c.Data["Contents"] = contents
+		} else {
+			var list []orm.Params
+			sql := fmt.Sprintf("select * from %s", contentType.SystemName)
+			database.DB.Orm.Raw(sql).Values(&list)
+			c.Data["ListMaps"] = list
+			c.Data["RowIDStr"] = fmt.Sprintf("%s_id", contentType.SystemName)
+
+			fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
+			maxCount := 5
+			if len(fieldTypes) < 5 {
+				maxCount = len(fieldTypes)
+			}
+			c.Data["FieldTypes"] = fieldTypes[:maxCount]
+		}
 	} else if fun == "create" {
 		c.TplName = "admin/publish_create.html"
 		c.AddCSS("dataset.css")
@@ -502,6 +526,7 @@ func (c *AdminCPController) Publish() {
 		}
 
 		c.Data["Fields"] = fieldTypes
+
 		if c.IsPost() {
 			title := c.GetString("title","")
 
@@ -523,7 +548,7 @@ func (c *AdminCPController) Publish() {
 			utils.JJKPrintln(datetimeStr)
 			utils.JJKPrintln(date, dateHour, dateMinute, dateAmpm, languageId, privileges, title)
 
-			//主表
+			//发布内容表
 			content := &models.Content{
 				Language:language,
 				ContentType:contentType,
@@ -535,10 +560,15 @@ func (c *AdminCPController) Publish() {
 				ContentPrivileges:privilegesJson,
 			}
 
-			contentId, _ := database.DB.Orm.Insert(content)
-			content.ContentId = contentId
+			if contentType.IsStandard {
+				contentId, _ := database.DB.Orm.Insert(content)
+				content.ContentId = contentId
+			} else {
+				content.ContentId = 0
+			}
 
-			//自定义表
+
+			//自定义字段表
 			params := utils.TemplateParams()
 			params["FieldTypes"] = fieldTypes
 			params["ContentType"] = contentType
@@ -604,12 +634,14 @@ func (c *AdminCPController) Publish() {
 					values = append(values, c.GetString(value.SystemName,""))
 				}
 			}
+
 			_, err := database.DB.DBBaseExecSQL(sql,values)
 			if err != nil {
 				utils.JJKPrintln(err)
 			}
 
 			c.SetError("添加成功", true)
+			c.RedirectWithURL(fmt.Sprintf("/admincp/publish/manage/%d?active=2", contentType.ContentTypeId))
 		}
 	} else if fun == "edit" {
 		c.TplName = "admin/publish_edit.html"
@@ -623,15 +655,31 @@ func (c *AdminCPController) Publish() {
 		languages := database.DB.GetLanguages()
 		c.Data["Languages"] = languages
 
-		contentId := c.PathInt64(4)
-		content := database.DB.GetContentWithContentID(contentId)
-		c.Data["Content"] = content
+		c.Data["ContentType"] = contentType
+
+		var rowId int64
+		var content *models.Content
+		if contentType.IsStandard {
+			contentId := c.PathInt64(4)
+			content = database.DB.GetContentWithContentID(contentId)
+			c.Data["Content"] = content
+			rowId = contentId
+		} else {
+			rowId = c.PathInt64(4)
+		}
 
 		fieldTypes := database.DB.GetFieldTypesWithContentTypeId(contentTypeId)
 
-		params, _ := database.DB.DBBaseAnyTableSelectOneRowWithContentID(contentType.SystemName, contentId)
+		var params orm.Params
+		if !contentType.IsStandard {
+			params, _ = database.DB.DBBaseAnyTableSelectOneRowWithID(contentType.SystemName, rowId)
+		} else {
+			params, _ = database.DB.DBBaseAnyTableSelectOneRowWithContentID(contentType.SystemName, rowId)
+		}
 		for i := 0; i < len(fieldTypes); i++ {
 			fieldTypes[i].DefaultValue = utils.ToString(params[fieldTypes[i].SystemName])
+
+			//回填处理
 			if fieldTypes[i].Type == models.FieldTypeStrMemberGroupRelationship {
 				fieldTypes[i].Options = utils.JKJSON(database.DB.GetUserRoles())
 			} else if fieldTypes[i].Type == models.FieldTypeStrRelationship {
@@ -678,7 +726,11 @@ func (c *AdminCPController) Publish() {
 			content.ContentTitle = title
 			content.ContentPrivileges = privilegesJson;
 
-			database.DB.Orm.Update(content)
+			if contentType.IsStandard {
+				database.DB.Orm.Update(content)
+			} else {
+				content.ContentId = 0
+			}
 
 			//自定义表
 			params := utils.TemplateParams()

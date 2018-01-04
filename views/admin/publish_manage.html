@@ -19,70 +19,92 @@
 				<input type="hidden" id="sort_column" name="sort_column" value="" />
 				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
 				<div class="pagination">
-					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/delete" name="action_1" action="delete_articles" value="删除" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/copypage" name="action_2" action="copy_articles" value="复制" />&nbsp;</div>
+					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/delete" name="action_1" info="{{.ContentType.ContentTypeId}}" action="{{if .ContentType.IsStandard}}delete_articles{{else}}delete_articles_not_standard{{end}}" value="删除" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/copypage" name="action_2" action="copy_articles" value="复制" />&nbsp;</div>
 					<div class="apply_filters"><input type="submit" class="button tooltip" title="Only show results matching the filter criteria you have entered/selected at the top of the dataset." name="filter_dataset" value="过滤结果" />&nbsp;&nbsp;<input id="reset_filters" type="reset" name="reset_filters" class="button tooltip" title="Show all results in this dataset" value="清除过滤" />&nbsp;&nbsp;<input id="dataset_export_button" type="button" name="" class="button tooltip" title="Export all dataset results (with ALL of their information) to a CSV file.  This file can then be imported into an application like Excel." value="导出" /></div>
 				</div>
 				<table class="dataset" cellpadding="0" cellspacing="0">
+
 					<thead>
 						<tr>
-							<td style="width:5%">&nbsp;</td>
-							<td style="width:5%">ID #</td>
-							<td style="width:10%">Language</td>
-							<td style="width:25%">
-								<a class="sort_column tooltip" title="sort ascending" rel="content.content_title" direction="asc" href="#">标题</a>
-							</td>
-							<td style="width:20%">Author</td>
-							<td style="width:15%">
-								<a class="sort_column tooltip" title="sort ascending" rel="topic_maps.topic_id" direction="asc" href="#">Topic</a>
-							</td>
-							<td style="width:15%">
-								<a class="sort_column tooltip" title="sort ascending" rel="content.content_date" direction="asc" href="#">Date</a>
-							</td>
-							<td style="width:10%">
-								<a class="sort_column tooltip" title="sort ascending" rel="content.content_hits" direction="asc" href="#">点击数</a>
-							</td>
-							<td style="width:15%"></td>
+							{{if .ContentType.IsStandard}}
+								<td style="width:5%">&nbsp;</td>
+								<td style="width:5%">ID #</td>
+								<td style="width:10%">Language</td>
+								<td style="width:25%">
+									<a class="sort_column tooltip" title="sort ascending" rel="content.content_title" direction="asc" href="#">标题</a>
+								</td>
+								<td style="width:20%">Author</td>
+								<td style="width:15%">
+									<a class="sort_column tooltip" title="sort ascending" rel="topic_maps.topic_id" direction="asc" href="#">Topic</a>
+								</td>
+								<td style="width:15%">
+									<a class="sort_column tooltip" title="sort ascending" rel="content.content_date" direction="asc" href="#">Date</a>
+								</td>
+								<td style="width:10%">
+									<a class="sort_column tooltip" title="sort ascending" rel="content.content_hits" direction="asc" href="#">点击数</a>
+								</td>
+								<td style="width:15%"></td>
+							{{else}}
+								<td style="width:5%">&nbsp;</td>
+								<td style="width:5%">ID #</td>
+								{{range .FieldTypes}}
+									<td style="width:20%">{{.Name}}</td>
+								{{end}}
+							{{end}}
 						</tr>
 					</thead>
+
 					<tbody>
-						<tr class="filters">
-							<td style="width:5%"><input type="checkbox" name="check_all" id="check_all" value="check_all" /></td>
-							<td class="filter"><input type="text" class="text id" name="text" value="" /></td>
-							<td class="filter"><input type="text" class="text" name="language_name" value="" /></td>
-							<td class="filter"><input type="text" class="text" name="title" value="" /></td>
-							<td class="filter"><input type="text" class="text" name="author_like" value="" /></td>
-							<td class="filter">
-								<select name="topic">
-									<option value=""></option>
-									<option value="1011">军事</option>
-									<option value="1012">政治</option>
-									<option value="1010">热点</option>
-									<option value="1000">默认话题</option>
-								</select>
-							</td>
-							<td class="filter"><input type="text" rel="start date" class=" mark_empty text date_start datepick" name="date_start" value="" /><input type="text" rel="end date" class=" mark_empty text date_end datepick" name="date_end" value="" /></td>
-							<td></td>
-							<td></td>
-						</tr>
-						{{range .Contents}}
-						<tr>
-							<td><input type="checkbox" name="check_{{.ContentId}}" value="{{.ContentId}}" class="action_items" /></td>
-							<td>{{.ContentId}}</td>
-							<td>{{.Language.Name}}</td>
-							<td>
-								<a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">{{.ContentTitle}}</a>
-							</td>
-							<td>{{.User.Username}}</td>
-							<td>
-							</td>
-							<td>{{date .ContentModified "Y-m-d H:i:s"}}</td>
-							<td>{{.ContentHits}}</td>
-							<td class="options">
-								<a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">编辑</a>
-								<a href="/sc/20170313135915/{{.ContentId}}">查看</a>
-							</td>
-						</tr>
+						{{if .ContentType.IsStandard}}
+							<tr class="filters">
+								<td style="width:5%"><input type="checkbox" name="check_all" id="check_all" value="check_all" /></td>
+								<td class="filter"><input type="text" class="text id" name="text" value="" /></td>
+								<td class="filter"><input type="text" class="text" name="language_name" value="" /></td>
+								<td class="filter"><input type="text" class="text" name="title" value="" /></td>
+								<td class="filter"><input type="text" class="text" name="author_like" value="" /></td>
+								<td class="filter">
+									<select name="topic">
+										<option value=""></option>
+										<option value="1011">军事</option>
+										<option value="1012">政治</option>
+										<option value="1010">热点</option>
+										<option value="1000">默认话题</option>
+									</select>
+								</td>
+								<td class="filter"><input type="text" rel="start date" class=" mark_empty text date_start datepick" name="date_start" value="" /><input type="text" rel="end date" class=" mark_empty text date_end datepick" name="date_end" value="" /></td>
+								<td></td>
+								<td></td>
+							</tr>
 						{{end}}
+                        {{range .Contents}}
+                        <tr>
+                            <td><input type="checkbox" name="check_{{.ContentId}}" value="{{.ContentId}}" class="action_items" /></td>
+                            <td>{{.ContentId}}</td>
+                            <td>{{.Language.Name}}</td>
+                            <td>
+                                <a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">{{.ContentTitle}}</a>
+                            </td>
+                            <td>{{.User.Username}}</td>
+                            <td>
+                            </td>
+                            <td>{{date .ContentModified "Y-m-d H:i:s"}}</td>
+                            <td>{{.ContentHits}}</td>
+                            <td class="options">
+                                <a href="/admincp/publish/edit/{{.ContentType.ContentTypeId}}/{{.ContentId}}">编辑</a>
+                                <a href="/sc/20170313135915/{{.ContentId}}">查看</a>
+                            </td>
+                        </tr>
+                        {{end}}
+                        {{range $index, $elem := .ListMaps}}
+                        <tr>
+                            <td><input type="checkbox" name="check_{{map_get $elem $.RowIDStr}}" value="{{map_get $elem $.RowIDStr}}" class="action_items" /></td>
+                            <td><a href="/admincp/publish/edit/{{$.ContentType.ContentTypeId}}/{{map_get $elem $.RowIDStr}}">{{map_get $elem $.RowIDStr}}</a></td>
+                            {{range $.FieldTypes}}
+                            <td>{{substr (html2str (map_get $elem .SystemName)) 0 30}}</td>
+                            {{end}}
+                        </tr>
+                        {{end}}
+
 				</table>
 				<div class="pagination">
 					<div class="dataset_stats"><b>6</b> 条记录</div>

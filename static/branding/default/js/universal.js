@@ -276,9 +276,10 @@ $(document).ready(function() {
 		if (serialized_items != '') {	
 			var link = $(this).attr('rel');
 			var action = $(this).attr('action');
+			var info = $(this).attr('info');
 			var return_link = $('#current_url').html();
 			
-			$.post($('#base_url').html()+'dataset/prep_actions', { items: serialized_items, return_url: return_link, action:action},
+			$.post($('#base_url').html()+'dataset/prep_actions', { items: serialized_items, return_url: return_link, action:action, info:info},
 			  function(data){
 				  window.location.reload();
 			    //window.location.href = link+'/'+data;

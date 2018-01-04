@@ -5,7 +5,7 @@
 		<div id="box-bottom-right"></div>
 		<div id="box-content">
 			<form class="form validate" id="form_create_post" enctype="multipart/form-data" method="post">
-
+				{{if .ContentType.IsStandard}}
 				<input type="hidden" name="type" value="11" />
 
 				<input type="hidden" name="link_id" value="" />
@@ -145,11 +145,12 @@
 						</div>
 					</div>
 				</div>
+				{{end}}
 
 				<h1>{{.ContentType.Name}} 发布</h1>
 
 				<div style="float: left; width: 70%;">
-
+					{{if .ContentType.IsStandard}}
 					<div class="post_title">
 						<fieldset>
 							<legend>Standard Page Elements</legend>
@@ -164,7 +165,7 @@
 							</ul>
 						</fieldset>
 					</div>
-
+					{{end}}
 					<div class="post_custom_fields">
 						<fieldset>
 							<legend>自定义字段</legend>
