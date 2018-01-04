@@ -4,7 +4,8 @@
 		<div id="box-bottom-left"></div>
 		<div id="box-bottom-right"></div>
 		<div id="box-content">
-			<ul class="module_links"><li><a href="javascript:history.go(-1)">返回</a></li></ul><h1>New Custom Field</h1>
+			<ul class="module_links"><li><a href="javascript:history.go(-1)">返回</a></li></ul>
+            <h1>New Custom Field</h1>
 			<form class="form validate" id="go_field" method="post" action="/admincp/fields/{{.ContentType.ContentTypeId}}">
 				<input type="hidden" name="area" value="publish" />
 				<input type="hidden" name="custom_field_group_id" value="25" />
@@ -28,16 +29,16 @@
 						</li>
 						<li>
 							<select name="type" id="type">
+								<option value="text">Text</option>
+								<option value="textarea">Textarea</option>
+                                <option value="date">Date</option>
+                                <option value="datetime">Date &amp; Time</option>
 								<option value="wysiwyg">WYSIWYG Textarea</option>
 								<option value="checkbox">Checkbox</option>
-								<option value="date">Date</option>
-								<option value="datetime">Date &amp; Time</option>
 								<option value="multicheckbox">Multicheckbox Options</option>
 								<option value="multiselect">Multiselect Dropdown</option>
 								<option value="radio">Radio Button</option>
 								<option value="select">Select Dropdown</option>
-								<option value="text">Text</option>
-								<option value="textarea">Textarea</option>
 								<option value="file_upload">File Upload</option>
 								<option value="member_group_relationship">Member Group Relationship</option>
 								<option value="relationship">Content Relationship</option>

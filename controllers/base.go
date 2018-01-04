@@ -118,6 +118,17 @@ func (c *BaseController) GetDateTimeStr(key string) string {
 	return utils.JKTimeToString(datetime)
 }
 
+func (c *BaseController) GetLimit() int64 {
+	limit , _ := c.GetInt64("limit", conf.GlobalConfig.PageLimit)
+	return limit
+}
+
+func (c *BaseController) GetOffset() int64 {
+	offset , _ := c.GetInt64("offset", 0)
+	return offset
+}
+
+
 
 
 

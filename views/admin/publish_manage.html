@@ -19,9 +19,12 @@
 				<input type="hidden" id="sort_column" name="sort_column" value="" />
 				<input type="hidden" id="sort_dir" name="sort_dir" value="" />
 				<div class="pagination">
+                    {{if .Pagination}}
+                    {{str2html .Pagination}}
+                    {{end}}
 					<div class="dataset_actions">选中: <input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/delete" name="action_1" info="{{.ContentType.ContentTypeId}}" action="{{if .ContentType.IsStandard}}delete_articles{{else}}delete_articles_not_standard{{end}}" value="删除" />&nbsp;<input type="button" class="button action_button" rel="http://localhost/hero/admincp/publish/copypage" name="action_2" action="copy_articles" value="复制" />&nbsp;</div>
 					<div class="apply_filters"><input type="submit" class="button tooltip" title="Only show results matching the filter criteria you have entered/selected at the top of the dataset." name="filter_dataset" value="过滤结果" />&nbsp;&nbsp;<input id="reset_filters" type="reset" name="reset_filters" class="button tooltip" title="Show all results in this dataset" value="清除过滤" />&nbsp;&nbsp;<input id="dataset_export_button" type="button" name="" class="button tooltip" title="Export all dataset results (with ALL of their information) to a CSV file.  This file can then be imported into an application like Excel." value="导出" /></div>
-				</div>
+                </div>
 				<table class="dataset" cellpadding="0" cellspacing="0">
 
 					<thead>
@@ -107,7 +110,10 @@
 
 				</table>
 				<div class="pagination">
-					<div class="dataset_stats"><b>6</b> 条记录</div>
+					<div class="dataset_stats"><b>{{.RowCount}}</b> 条记录</div>
+                    {{if .Pagination}}
+                    {{str2html .Pagination}}
+                    {{end}}
 				</div>
 			</form>
 			<div class="hidden" id="class">publish</div>

@@ -231,7 +231,7 @@ func (c *AdminCPController) Types() {
 			//记录content type
 			contentType := &models.ContentType{
 				SystemName:systemName,
-				Name:utils.UpperFirstChar(name),
+				Name:name,
 				IsPrivileged:isPrivileged,
 				IsStandard:isStandard,
 				BaseUrl:baseUrl,
@@ -471,6 +471,8 @@ func (c *AdminCPController) Publish() {
 	contentType := database.DB.GetContentTypeWithId(contentTypeId)
 	c.Data["ContentType"] = contentType
 
+
+
 	if fun == "manage" {
 		c.TplName = "admin/publish_manage.html"
 		c.AddCSS("dataset.css")
@@ -480,7 +482,7 @@ func (c *AdminCPController) Publish() {
 			c.Data["Contents"] = contents
 		} else {
 			var list []orm.Params
-			sql := fmt.Sprintf("select * from %s", contentType.SystemName)
+			sql := fmt.Sprintf("select * from %s order by %s_id desc limit %d, %d;", contentType.SystemName, contentType.SystemName, c.GetOffset(), c.GetLimit())
 			database.DB.Orm.Raw(sql).Values(&list)
 			c.Data["ListMaps"] = list
 			c.Data["RowIDStr"] = fmt.Sprintf("%s_id", contentType.SystemName)
@@ -492,6 +494,12 @@ func (c *AdminCPController) Publish() {
 			}
 			c.Data["FieldTypes"] = fieldTypes[:maxCount]
 		}
+
+		count := database.DB.DBBaseTableCount(contentType.SystemName)
+		c.Data["RowCount"] = count
+
+		//分页
+		c.Data["Pagination"] = c.Pagination(count, conf.GlobalConfig.PageLimit)
 	} else if fun == "create" {
 		c.TplName = "admin/publish_create.html"
 		c.AddCSS("dataset.css")
