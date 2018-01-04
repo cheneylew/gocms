@@ -478,7 +478,7 @@ func (c *AdminCPController) Publish() {
 		c.AddCSS("dataset.css")
 
 		if contentType.IsStandard {
-			contents := database.DB.GetContentsWithContentTypeID(contentTypeId)
+			contents := database.DB.GetContentsWithContentTypeIDAndOffsetLimit(contentTypeId, c.GetOffset(), c.GetLimit())
 			c.Data["Contents"] = contents
 		} else {
 			var list []orm.Params

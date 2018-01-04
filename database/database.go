@@ -204,3 +204,15 @@ func (db *DataBase)GetContentsWithContentTypeID(contentTypeId int64) []*models.C
 
 	return models
 }
+
+func (db *DataBase)GetContentsWithContentTypeIDAndOffsetLimit(contentTypeId, offset, limit int64) []*models.Content {
+	var models []*models.Content
+	qs := db.Orm.QueryTable("Content")
+
+	_, err := qs.Filter("ContentType__ContentTypeId", contentTypeId).OrderBy("-ContentId").Limit(limit, offset).RelatedSel().All(&models)
+	if err != nil || len(models) == 0{
+		return nil
+	}
+
+	return models
+}
