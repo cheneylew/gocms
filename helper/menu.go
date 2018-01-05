@@ -30,7 +30,7 @@ func CreateMenus() []*models.Menu {
 			ParentId:2,
 			Name:"发布文章",
 			Icon:"",
-			Url:"/admincp/home",
+			Url:"/admincp/publish/new",
 			IsActive:true,
 			Chirldren:nil,
 		})

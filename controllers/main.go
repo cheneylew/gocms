@@ -13,7 +13,7 @@ func (c *MainController) Finish() {
 }
 
 func (c *MainController) Get() {
-	c.RedirectWithURL("/main/index")
+	c.RedirectWithURL("/admincp/login")
 }
 
 func (c *MainController) Index() {

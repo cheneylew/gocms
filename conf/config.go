@@ -12,7 +12,7 @@ func init() {
 	GlobalConfig = MYConfig{
 		ProductName:"Hero",
 		SupportUrl:"http://www.golangcms.com/",
-		PageLimit:3,
+		PageLimit:30,
 	}
 }
 

@@ -1,0 +1,28 @@
+<div id="wrapper">
+	<div id="content">
+		<div id="box-top-right"></div>
+		<div id="box-bottom-left"></div>
+		<div id="box-bottom-right"></div>
+		<div id="box-content">
+			<h1>选择文章类型</h1>
+			<form class="form validate" id="form_create_type" method="post">
+				<fieldset><legend>发布新的 Content</legend>
+                    <ul class="form">
+                        <li id="row_">
+                            <label class="" for="type">类型</label>
+                            <select name="type" class="required">
+                            <option value=""></option>
+                            {{range .ContentTypes}}
+                            <option value="{{.ContentTypeId}}">{{.Name}}</option>
+                            {{end}}
+                    </select>
+                    </li>
+                    </ul></fieldset>
+                <div class="submit">
+				<input type="submit" class="button" name="form_create_type" value="创建文章">
+			</div>
+			</form>
+		</div>
+		<div id="box-bottom"></div>
+	</div>
+</div>

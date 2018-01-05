@@ -472,8 +472,15 @@ func (c *AdminCPController) Publish() {
 	c.Data["ContentType"] = contentType
 
 
+	if fun == "new" {
+		c.TplName = "admin/publish_new.html"
 
-	if fun == "manage" {
+		c.Data["ContentTypes"] = database.DB.GetContentTypes()
+		if c.IsPost() {
+			ftype := c.GetString("type","")
+			c.RedirectWithURL(fmt.Sprintf("/admincp/publish/create/%s", ftype))
+		}
+	} else if fun == "manage" {
 		c.TplName = "admin/publish_manage.html"
 		c.AddCSS("dataset.css")
 
