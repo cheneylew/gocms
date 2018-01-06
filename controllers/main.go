@@ -13,7 +13,7 @@ func (c *MainController) Finish() {
 }
 
 func (c *MainController) Get() {
-	c.RedirectWithURL("/admincp/login")
+	c.TplName = "main.html"
 }
 
 func (c *MainController) Index() {
